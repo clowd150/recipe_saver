@@ -1,0 +1,99 @@
+<html>
+<head>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+	<style>
+		table {
+			border: solid 1px black;
+		}
+		table td {
+			border: solid 1px black;
+		}
+		table th {
+			border: solid 1px blue;
+		}
+	</style>
+</head>
+<body>
+	<h1>Profile</h1>
+	<h2>Create a Recipe</h2>
+	<form method="POST">
+
+		<span>Recipe Name:</span>	
+		<input type="text" name="recipe" required><br>
+		<span>Url:</span>
+		<input type="text" name="url"><br>
+		<span>Notes:</span>
+		<input type="text" name="notes"><br>
+		<input type="submit">
+	</form>
+
+	<% user.recipes.reverse() %>
+	<table>
+		<tr>
+			<th>Recipe</th>
+			<th>Url</th>
+			<th>Notes</th>
+			<th>Edit</th>
+		</tr>
+
+		<% for(var i=0; i<user.recipes.length; i++) { %>
+			<tr>
+				<td class="recipe"><%= user.recipes[i].recipeName  %></td>
+				<td><%= user.recipes[i].url  %></td>
+				<% if (user.recipes[i].notes) { %>
+					<td><%= user.recipes[i].notes %></td>
+				<% } else { %>
+					<td></td>
+				<% } %>
+				<td><a href="profile/delete/<%=user.recipes[i]._id%>">Delete</a> <input type="hidden" value="<%=user.recipes[i]._id%>"><a class="editURL" href="#">Edit Url</a> <a class="editName" href="#">Edit Name</a></td>
+			</tr>
+	    <% } %>
+	</table>
+
+	<script>
+	$(document).ready(function() {
+		$('.editURL').click(function() {
+			var url = $(this).parent("td").prev().prev();
+			var urlvalue = url.html();
+			url.replaceWith("<input id='newurl' type='text' name='newurl' value='" + urlvalue + "'>");
+
+			var recordID = $(this).prev().val();
+			$('#newurl').keydown(function (e){
+    			if(e.keyCode == 13) {
+    				$.ajax({
+				        url: "/updateUrl/" + recordID,
+				        type: "POST",
+				        data: $('#newurl').serialize()
+				    }).done(function() {
+				    	location.reload();
+				    });
+    			}
+			});
+		});
+
+		$('.editName').click(function() {
+			var name = $(this).parent("td").prev().prev().prev();
+
+			var namevalue = name.html();
+			name.replaceWith("<input id='newname' type='text' name='newname' value='" + namevalue + "'>");
+
+			var recordID = $(this).prev().prev().val();
+
+			$('#newname').keydown(function (e){
+    			if(e.keyCode == 13) {
+    				$.ajax({
+				        url: "/updateName/" + recordID,
+				        type: "POST",
+				        data: $('#newname').serialize()
+				    }).done(function() {
+				    	location.reload();
+				    });
+    			}
+			});
+		});
+
+	});
+	</script>
+
+</body>
+</html>

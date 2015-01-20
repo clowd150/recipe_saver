@@ -1,0 +1,114 @@
+<html>
+<head>
+	<meta charset="UTF-8">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/jquery-ui.min.js"></script>
+	<style>
+
+		body {
+			font-family: 'Raleway', sans-serif;
+			font-size: 0.9em;
+			font-weight: 400;
+		}
+		a {
+			color: black;
+		}
+		.editImage {
+			margin-right: 3px;
+		}
+		.rName {
+			width: 600px;
+			border: solid 0px green;
+			position: relative;
+			float: left;
+			margin-left: 124px;
+			color: #d18700;
+		}
+		.menu {
+			border: solid 0px red;
+			width: 118px;
+			z-index: 10;
+			float: right;
+			position: absolute;
+			margin-top: 2px;
+			background-color: gray;
+			display: none;
+			font-size: 0.8em;
+			line-height: 1.6em;
+			text-align: right;
+			padding-right: 4px;
+		}
+		.URL {
+			width: 600px;
+			border: solid 0px red;
+			line-height: 1.6em;
+			font-size: 0.8em;
+			clear: both;
+			margin-left: 142px;
+		}
+		.noteIndicator {
+			margin-left: 142px;
+		}
+		.noteIndicator a {
+			color: blue;
+		}
+		.notes {
+			border: solid 1px yellow;
+			margin-left: 142px;
+			width: 700px;
+		}
+		.noNotes {
+			border: solid 1px red;
+			margin-left: 142px;
+			width: 700px;
+		}
+		#sortMenu {
+			margin-left: 124px;
+		}
+		#newnote {
+			width: 600px;
+			height: 120px;
+			border: 3px solid #cccccc;
+			padding: 5px;
+			font-family: Tahoma, sans-serif;
+		}
+	</style>
+</head>
+<body>
+	<h1>Profile</h1>
+	<h2>Create a Recipe</h2>
+	<form id="recipeEntry">
+
+		<span>Recipe Name:</span>	
+		<input type="text" name="recipe" required><br>
+		<span>Url:</span>
+		<input type="text" name="url"><br>
+		<span>Notes:</span>
+		<textarea name="notes"></textarea><br>
+		<input id="submitRecipe" type="submit">
+	</form>
+	<br>
+	<div id="sortMenu">
+		<a href="#" id="sortAZ">Sort by name A - Z</a>
+		<a href="#" id="sortZA">Sort by name Z - A</a>
+		<br>
+		<br>
+	</div>
+	<div class="result">
+		test
+	</div>
+
+	<script>
+	$(document).ready(function() {
+
+		$.get( "/recipelist", function(data) {
+			$('.result').html(data);
+			$.get( "/script.js", function(data) {
+				
+			});
+		});
+	});
+	</script>
+
+</body>
+</html>
