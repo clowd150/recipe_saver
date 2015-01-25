@@ -13,9 +13,18 @@ $(document).ready(function() {
 		    	generatedIdParent = response.find('input').parent();
 				$('.result').html(generatedIdParent);
 				resetNotesFormat();
+				$('.notes').hide();
 			});
 		});
 		$('#recipeEntry')[0].reset();
+		$('#notify').hide().html("Recipe posted! :-)").fadeIn(1000);
+		setTimeout(function() {
+			$('#notify').fadeOut(1000);
+		}, 3500);
+		setTimeout(function() {
+			$('#notify').fadeIn();
+			$('#notify').html("&nbsp;");
+		}, 4500);
 	});
 
 	// Hide Notes on load
@@ -85,6 +94,7 @@ $(document).ready(function() {
 						currentRecipe.html(parentRecipe);
 						$('.space').replaceWith("<a class='edit' href='#'><img src='edit.png' class='editImage'></a>");
 						resetNotesFormat();
+						$('.notes').hide();
 					});
 			    });
 			}
@@ -150,6 +160,7 @@ $(document).ready(function() {
 						var newFormattedRecipe = $.trim(parentRecipe.find('.notes').html())
 						newFormattedRecipe = newFormattedRecipe.replace(/\n\r?/g, '<br>');
 						currentRecipe.find('.notes').html(newFormattedRecipe);
+						$('.notes').hide();
 					});
 			    });
 			}
@@ -169,11 +180,13 @@ $(document).ready(function() {
 		$('.rName').find('img').unwrap();
 
 		//Don't include var here
-		noteClone = $(this).parent().next().next().next().next().html();
+		noteClone = $(this).parent().next().next().next().html();
+		var targetSpot = $(this).parent().next().next().next().find("*").next();
+		console.info("target class: " + targetSpot.attr('class'));
 		console.info('Note Clone: ' + noteClone +"\nNoteClone length: " + noteClone.length);
 
-
-		if (noteClone.length >= 1) {
+		console.log("NOTECLONE CLASS: " + $(this).parent().next().next().next().attr('class'));
+		if ($(this).parent().next().next().next().attr('class') == "existingNote") {
 			var noteSection = $(this).parent().next().next().next().next();
 			
 			if (!noteSection.is(":visible")) {
@@ -182,12 +195,12 @@ $(document).ready(function() {
 
 			$('.editImage').replaceWith("<span class='space'>&nbsp;&nbsp;&nbsp;&nbsp;<span>");
 
-			var noteValue = $(this).parent().next().next().next().next().html();
+			var noteValue = $(this).parent().next().next().next().find("*").next().html();
 			console.log("Note Value: " + noteValue);
 			var noteValue2 = noteValue.replace(/<br>/g, '\r');
 			console.log("Note Value2: " + noteValue2);
 
-			var noteParent = $(this).parent().next().next().next().next();
+			var noteParent = $(this).parent().next().next().next();
 			console.log("noteParent: " + noteParent.html());
 			noteParent.html("<textarea id='newnote' name='newnote'></textarea><button id='newNoteSubmit'>Save</button><button id='cancel'>Cancel</button>");
 			$('#newnote').val(noteValue2);
@@ -198,10 +211,10 @@ $(document).ready(function() {
 		} else {
 			console.warn('ELSE BLCOK');
 			$('.editImage').replaceWith("<span class='space'>&nbsp;&nbsp;&nbsp;&nbsp;<span>");
-			var noteValue = $(this).parent().next().next().next().next().html();
+			var noteValue = $(this).parent().next().next().next().find("*").next().html();
 			var noteParent = $(this).parent().next().next().next();
 			noteParent.html("<textarea id='newnote' name='newnote'></textarea><button id='newNoteSubmit2'>Save</button><button id='cancel'>Cancel</button>");
-			$('#newnote').val(noteValue);
+			//$('#newnote').val(noteValue);
 
 			noteRecordID = $(this).parent().prev().val();
 			console.log("noteRecordID: " + noteRecordID);
@@ -224,13 +237,12 @@ $(document).ready(function() {
 				var parentRecipe = returnID.parent();
 				var newFormattedRecipe = $.trim(parentRecipe.find('.notes').html())
 				newFormattedRecipe = newFormattedRecipe.replace(/\n\r?/g, '<br>');
-	    		console.warn(newFormattedRecipe);
-	    		console.info(returnID.val());
 				if (newFormattedRecipe.length >= 1) {
-					currentNoteRecipe.find('.notes').html(newFormattedRecipe);
+					currentNoteRecipe.find('.existingNote').html("<div class='noteIndicator'><a href='#' class='noteToggler'>Notes</a></div><div class='notes'>" + newFormattedRecipe + "</div>");
+					console.log("CR: " + currentNoteRecipe.html());
+					console.log("LOOKING" + currentNoteRecipe.find('.notes').html());
 				} else {
-					currentNoteRecipe.find('.noteIndicator').remove();
-					currentNoteRecipe.find('.notes').replaceWith("<div class='noNotes'></div>");
+					currentNoteRecipe.find('.existingNote').replaceWith("<div class='alternative'><div class='blank'></div><div class='noNotes'></div></div>");
 				}
 				$('.space').replaceWith("<a class='edit' href='#'><img src='edit.png' class='editImage'></a>");
 				existingNote = false;
@@ -257,17 +269,19 @@ $(document).ready(function() {
 	    		console.warn(newFormattedRecipe);
 
 	    		console.log("Current RECIPE: "  + currentNoteRecipe.html());
-				currentNoteRecipe.find('.noNotes').replaceWith("<div class='noteIndicator'><a href='#' class='noteToggler'>Notes</a></div><div class='notes'>" + newFormattedRecipe + "</div>");
+				currentNoteRecipe.find('.alternative').replaceWith("<div class='existingNote'><div class='noteIndicator'><a href='#' class='noteToggler'>Notes</a></div><div class='notes'>" + newFormattedRecipe + "</div></div>");
 
 				$('.space').replaceWith("<a class='edit' href='#'><img src='edit.png' class='editImage'></a>");
 			});
 	    });
 	});  
 
+	// Note Cancel Button
 	$(document).on('click', '#cancel', function(e) {
 		e.preventDefault();
 		$('.space').replaceWith("<a class='edit' href='#'><img src='edit.png' class='editImage'></a>");
 		var target = $("#newnote").parent();
+		console.log(target.attr('class'));
 		target.html(noteClone);
 	});
 
@@ -278,8 +292,7 @@ $(document).ready(function() {
 		$('.menu').hide();
 
 		var recordID = $(this).parent().prev().val();
-		console.log(recordID);
-
+		console.log("Deleted Record ID: " + recordID);
 		var confirmation = confirm('Are you sure you want to delete this recipe?');
 		if (confirmation) {
 		   $.ajax({
@@ -322,27 +335,42 @@ $(document).ready(function() {
 		});
 	}
 
-	// Sort
+	// Sort A - Z
 	$(document).on('click', '#sortAZ', function(e) {
 		e.preventDefault();
 		$.get( "/profile/sortAZ", function() {
-			
 		}).done(function() {
 			$.get( "/recipelist", function(data) {
 				$('.result').html(data);
+				$('.notes').hide();
 			});
 		});
 	});
 
+	// Sort Z - A
 	$(document).on('click', '#sortZA', function(e) {
 		e.preventDefault();
 		$.get( "/profile/sortZA", function() {
-			
 		}).done(function() {
 			$.get( "/recipelist", function(data) {
 				$('.result').html(data);
+				$('.notes').hide();
 			});
 		});
 	});
+
+	// Sort by Tag
+	$(document).on('click', '.aTag', function(e) {
+		e.preventDefault();
+		var tagName = $(this).text();
+		console.log("TAGNAME: " + tagName);
+	   $.ajax({
+	        url: "/profile/tags/" + tagName,
+	        type: "GET"
+	    }).done(function() {
+
+		});
+	});
+
 
 });

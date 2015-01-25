@@ -46,20 +46,15 @@
 			clear: both;
 			margin-left: 142px;
 		}
-		.noteIndicator {
-			margin-left: 142px;
-		}
 		.noteIndicator a {
 			color: blue;
 		}
 		.notes {
 			border: solid 1px yellow;
-			margin-left: 142px;
 			width: 700px;
 		}
 		.noNotes {
 			border: solid 1px red;
-			margin-left: 142px;
 			width: 700px;
 		}
 		#sortMenu {
@@ -72,21 +67,45 @@
 			padding: 5px;
 			font-family: Tahoma, sans-serif;
 		}
+		.tags {
+			width: 600px;
+			border: solid 1px green;
+			line-height: 1.6em;
+			font-size: 0.8em;
+			clear: both;
+			margin-left: 142px;
+		}
+		.aTag {
+			border: solid 1px black;
+		}
+		.existingNote {
+			margin-left: 142px;
+			width: 600px;
+		}
+		.alternative {
+			margin-left: 142px;
+			width: 600px;		
+		}
 	</style>
 </head>
 <body>
 	<h1>Profile</h1>
 	<h2>Create a Recipe</h2>
 	<form id="recipeEntry">
-
 		<span>Recipe Name:</span>	
 		<input type="text" name="recipe" required><br>
 		<span>Url:</span>
 		<input type="text" name="url"><br>
 		<span>Notes:</span>
 		<textarea name="notes"></textarea><br>
+		<span>Tags:</span>
+		<input type="text" name="tags" placeholder="Separate with commas."><br>
 		<input id="submitRecipe" type="submit">
 	</form>
+	<br>
+	<div id="notify">
+		&nbsp;
+	</div>
 	<br>
 	<div id="sortMenu">
 		<a href="#" id="sortAZ">Sort by name A - Z</a>
@@ -95,7 +114,7 @@
 		<br>
 	</div>
 	<div class="result">
-		test
+		Loading...
 	</div>
 
 	<script>

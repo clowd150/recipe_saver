@@ -20,7 +20,16 @@ var User = mongoose.model('User', new Schema({
 	lastName: String,
 	email: { type: String, unique: true },
 	password: String,
-	recipes: [{ recipeName: String, url: String, notes: String }]
+	sortStyle: String
+}));
+
+var Recipe = mongoose.model('Recipe', new Schema({
+	id: ObjectId,
+	user_id: String,
+	recipeName: String,
+	url: String,
+	notes: String,
+	tags: [String]
 }));
 
 var app = express();
@@ -43,18 +52,57 @@ app.use(sessions({
 app.use(function(req, res, next) {
 	if (req.session && req.session.user) {
 		User.findOne({ email: req.session.user.email }, function(err, user) {
+			if (err) console.log("ALERT!!! NO USER FOUND!!");
 			if (user) {
 				req.user = user;
 				delete req.user.password;
 				req.session.user = user;
 				res.locals.user = user;
+				if (res.locals.user.sortStyle == "default") {
+					Recipe.find({ user_id: res.locals.user.email }, function(err, recipes) {
+						if (err) throw err;
+						console.log("User::: " + res.locals.user.email);
+						console.log("THE RECIPES: " + recipes);
+						res.locals.user.recipes = recipes;
+						next();
+					});
+				} else if (res.locals.user.sortStyle == "ZA") {
+					Recipe.find({ user_id: req.session.user.email }).sort({recipeName: 1}).exec(function (err, recipes) {
+						if (err) throw err;
+						recipes.forEach(function(doc) {
+							res.locals.user.recipes = recipes;
+						});
+						console.log("ZA is now set");
+						next();
+					});
+				} else if (res.locals.user.sortStyle == "AZ") {
+					Recipe.find({ user_id: req.session.user.email }).sort({recipeName: -1}).exec(function (err, recipes) {
+						if (err) throw err;
+						recipes.forEach(function(doc) {
+							res.locals.user.recipes = recipes;
+						});
+						console.log("AZ is now set");
+						next();
+					});
+				} else {
+					Recipe.find({ user_id: req.session.user.email }, function(err, recipes) {
+						if (err) throw err;
+						recipes.forEach(function(doc) {
+							res.locals.user.recipes = recipes;
+						});
+						console.log("default2 is now set");
+						next();
+					});
+				}
+			} else {
+				console.log("ALERT!!! NO USER FOUND!!");
 			}
-			next();
 		});
 	} else {
 		next();
 	}
 });
+
 
 function requireLogin(req, res, next) {
 	if (!req.user) {
@@ -78,7 +126,8 @@ app.post('/register', function(req, res) {
 		firstName: req.body.firstName,
 		lastName: req.body.lastName,
 		email: req.body.email,
-		password: hash
+		password: hash,
+		sortStyle: "default"
 	});
 	user.save(function(err) {
 		if (err) {
@@ -124,140 +173,121 @@ app.get('/profile', requireLogin, function(req, res) {
 });
 
 app.get('/recipelist', requireLogin, function(req, res) {
-	console.log("DDF");
 	res.render('recipelist.ejs');
 });
 
 // POST RECIPE
-app.post('/profile', function(req, res) {
-	User.findOne({ email: req.session.user.email }, function(err, user) {
-		var formattedUrl = formatUrl(req);
-		user.recipes.push({ recipeName: req.body.recipe, url: formattedUrl, notes: req.body.notes });
-		//user.recipes.push(req.body.recipe);
-		//user.urls.push(req.body.url);
-		user.save(function(err, thor) {
-		  if (err) return console.error(err);
-		  console.dir(thor);
-		});
-		res.redirect('/profile');
+app.post('/profile', requireLogin, function(req, res) {
+	var formattedUrl = formatUrl(req);
+	var tagsArray = req.body.tags.split(',');
+	var recipe = new Recipe({
+		user_id: req.session.user.email,
+		recipeName: req.body.recipe,
+		url: formattedUrl,
+		notes: req.body.notes,
+		tags: tagsArray
 	});
+	console.log("Posting a recipe");
+	recipe.save(function(err, thor) {
+	  if (err) return console.error(err);
+	  console.dir(thor);
+	});
+	User.findOne({ email: req.session.user.email }, function (err, user) {
+		user.sortStyle = "default";
+		user.save(function(rec) {
+			console.log("Sort style set to default");
+		});
+	});
+	res.redirect('/profile');
 });
 
 // UPDATE NAME
-app.post('/updateName/:recordID', function(req, res) {
-	User.findOne({ email: req.session.user.email }, function(err, user) {
-		if (err) return console.error(err);
-		var result = user.recipes.filter(function( obj ) {
-			return (obj._id == req.params.recordID);
-		});
-		var y = user.recipes.indexOf(result[0]);
-		user.recipes[y].recipeName = req.body.newname;
-		user.save(function (err) {
+app.post('/updateName/:recordID', requireLogin, function(req, res) {
+	Recipe.findOne({ _id: req.params.recordID }, function(err, recipe) {
+	if (err) return console.error(err);
+		recipe.recipeName = req.body.newname;
+		recipe.save(function(err) {
 			if (err) return console.error(err);
-			console.log('the sub-doc was updated')
+			console.log(recipe.recipeName + " was updated.");
+			console.log(recipe);
+			res.sendStatus(201);
 		});
-		console.log(user);
-		res.sendStatus(201);
 	});
 });
 
 // UPDATE URL
-app.post('/updateUrl/:recordID', function(req, res) {
+app.post('/updateUrl/:recordID', requireLogin, function(req, res) {
 	console.log(req.body.newurl);
-	User.findOne({ email: req.session.user.email }, function(err, user) {
+	Recipe.findOne({ _id: req.params.recordID }, function(err, recipe) {
 		if (err) return console.error(err);
-		var result = user.recipes.filter(function( obj ) {
-			return (obj._id == req.params.recordID);
-		});
-		var y = user.recipes.indexOf(result[0]);
 		var formattedUrl = formatUrlUpdate(req);
-		user.recipes[y].url = formattedUrl;
-		user.save(function (err) {
+		recipe.url = formattedUrl;
+		recipe.save(function(err) {
 			if (err) return console.error(err);
-			console.log('the sub-doc was updated')
+			console.log(recipe.url + " was updated.");
+			console.log(recipe);
+			res.sendStatus(201);
 		});
-		console.log(user);
-		res.sendStatus(201);
 	});
 });
 
-// UPDATE NOT
-app.post('/updateNote/:recordID', function(req, res) {
+// UPDATE NOTE
+app.post('/updateNote/:recordID', requireLogin, function(req, res) {
 	console.log(req.body.newnote);
-	User.findOne({ email: req.session.user.email }, function(err, user) {
+	Recipe.findOne({ _id: req.params.recordID }, function(err, recipe) {
 		if (err) return console.error(err);
-		var result = user.recipes.filter(function( obj ) {
-			return (obj._id == req.params.recordID);
-		});
-		var y = user.recipes.indexOf(result[0]);
-		user.recipes[y].notes = req.body.newnote;
-		user.save(function (err) {
+		recipe.notes = req.body.newnote;
+		recipe.save(function(err) {
 			if (err) return console.error(err);
-			console.log('the sub-doc was updated')
+			console.log(recipe.notes + " was updated.");
+			console.log(recipe);
+			res.sendStatus(201);
 		});
-		console.log(user);
-		res.sendStatus(201);
 	});
 });
 
 // DELETE RECIPE ENTRY
-app.get('/profile/delete/:recipeID', function(req, res) {
-	User.findOne({ email: req.session.user.email }, function(err, record) {
+app.get('/profile/delete/:recordID', requireLogin, function(req, res) {
+	Recipe.remove({ _id: req.params.recordID }, function(err, recipe) {
 		if (err) return console.error(err);
-		var result = record.recipes.filter(function( obj ) {
-			return (obj._id == req.params.recipeID);
-		});
-		//console.log(result[0]);
-		var y = record.recipes.indexOf(result[0]);
-		var myRemoval = record.recipes[y].remove();
-		record.save(function (err) {
-			if (err) return console.error(err);
-			console.log('the sub-doc was removed')
-		});
-		res.redirect('/profile');
+		console.log("params ID: "  + req.params.recordID);
+		console.log(recipe + " doc was removed.");
+		res.sendStatus(201);
 	});
 });
 
+// SORT BY TAGN 
+app.get('/profile/tags/:tag', requireLogin, function(req, res) {
+	console.log("TAG NAME: " + req.params.tag);
+	// Recipe.remove({ _id: req.params.recordID }, function(err, recipe) {
+	// 	if (err) return console.error(err);
+	// 	console.log("params ID: "  + req.params.recordID);
+	// 	console.log(recipe + " doc was removed.");
+	// 	res.sendStatus(201);
+	// });
+});
 
+// SORT Z - A
 app.get('/profile/sortZA', function(req, res) {
-	User.findOne({ email: req.session.user.email }, function(err, record) {
-		if (err) return console.error(err);
-		record.recipes.sort(function(a, b){
-			var nameA = a.recipeName.toLowerCase(), nameB = b.recipeName.toLowerCase()
-			if (nameA < nameB) //sort string ascending
-			return -1 
-			if (nameA > nameB)
-			return 1
-			return 0 //default return value (no sorting)
+	User.findOne({ email: req.session.user.email }, function (err, user) {
+		user.sortStyle = "ZA";
+		user.save(function(rec) {
+			console.log("Sort style set to ZA");
+			console.log("Returned User" + user);
+			res.sendStatus(200);
 		});
-		console.log(record.recipes);
-		record.save(function (err) {
-			if (err) return console.error(err);
-			console.log('the sub-doc was sorted')
-		});
-
-		res.redirect('/profile');
 	});
 });
 
+// SORT A - Z
 app.get('/profile/sortAZ', function(req, res) {
-	User.findOne({ email: req.session.user.email }, function(err, record) {
-		if (err) return console.error(err);
-		record.recipes.sort(function(a, b){
-			var nameA = a.recipeName.toLowerCase(), nameB = b.recipeName.toLowerCase()
-			if (nameB < nameA) //sort string ascending
-			return -1 
-			if (nameB > nameA)
-			return 1
-			return 0 //default return value (no sorting)
+	User.findOne({ email: req.session.user.email }, function (err, user) {
+		user.sortStyle = "AZ";
+		user.save(function(rec) {
+			console.log("Sort style set to AZ");
+			console.log("Returned User" + user);
+			res.sendStatus(200);
 		});
-		console.log(record.recipes);
-		record.save(function (err) {
-			if (err) return console.error(err);
-			console.log('the sub-doc was sorted')
-		});
-
-		res.redirect('/profile');
 	});
 });
 

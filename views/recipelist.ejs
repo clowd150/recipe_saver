@@ -1,34 +1,50 @@
 <div id="recipeList">
-	<% user.recipes.reverse() %>
-	<% for(var i=0; i<user.recipes.length; i++) { %>
-		<div class="recipeEntry">
-			<input type="hidden" value="<%=user.recipes[i]._id%>" id="<%=user.recipes[i]._id%>">
-			<div class="menu">
-				<a href="#" class="editName">Edit Recipe Name</a><br>
-				<a href="#" class="editUrl">Edit Url</a><br>
-				<a href="#" class="editNotes">Edit Notes</a><br>
-				<a href="#" class="delete">Delete Recipe</a>
-			</div>
-			<div class="rName">
-				<a class="edit" href="#"><img src="edit.png" class="editImage"></a>
-				<b><%=  user.recipes[i].recipeName %></b>
-			</div>
-			<div class="URL">
-				<a href="<%=user.recipes[i].url%>" target="_blank"><%= user.recipes[i].url  %></a>
-			</div>
-			<% if (user.recipes[i].notes) { %>
-				<div class="noteIndicator">
-					<a href="#" class="noteToggler">Notes</a>
+	<% if (user.recipes.length >= 1) { %> 
+		<% user.recipes.reverse() %>
+		<% for (var i=0; i<user.recipes.length; i++) { %>
+			<div class="recipeEntry">
+				<input type="hidden" value="<%=user.recipes[i]._id%>" id="<%=user.recipes[i]._id%>">
+				<div class="menu">
+					<a href="#" class="editName">Edit Recipe Name</a><br>
+					<a href="#" class="editUrl">Edit Url</a><br>
+					<a href="#" class="editNotes">Edit Notes</a><br>
+					<a href="#" class="delete">Delete Recipe</a>
 				</div>
-				<div class="notes">
-					<%= user.recipes[i].notes %>
+				<div class="rName">
+					<a class="edit" href="#"><img src="edit.png" class="editImage"></a>
+					<b><%=  user.recipes[i].recipeName %></b>
 				</div>
-			<% } else { %>
-				<div class="noNotes">
+				<div class="URL">
+					<a href="<%=user.recipes[i].url%>" target="_blank"><%= user.recipes[i].url  %></a>
 				</div>
-			<% } %>
-
-			<br>
-		</div>
-    <% } %>
+				<% if (user.recipes[i].notes) { %>
+					<div class="existingNote">
+						<div class="noteIndicator">
+							<a href="#" class="noteToggler">Notes</a>
+						</div>
+						<div class="notes">
+							<%= user.recipes[i].notes %>
+						</div>
+					</div>
+				<% } else { %>
+					<div class="alternative">
+						<div class="blank">
+						</div>
+						<div class="noNotes">
+						</div>
+					</div>
+				<% } %>
+				<% if (user.recipes[i].tags.length >= 1) { %>
+					<div class="tags">
+						<% for (var j=0; j<user.recipes[i].tags.length; j++) { %>
+							<span class="aTag"><a href="#"><%= user.recipes[i].tags[j] %></a></span>
+		    			<% } %>
+					</div>
+				<% } %>
+				<br>
+			</div>
+	    <% } %>
+	<% } else { %>
+		<h1>NO RECIPES</h1>
+	<% } %>
 </div>
