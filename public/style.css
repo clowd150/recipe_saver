@@ -1,0 +1,33 @@
+#recipeEntry input {
+	border: solid 1px black;
+
+	margin-bottom: 2px;
+	width: 200px;
+	background-color: #fcfcfc;
+	height: 25px;
+}
+
+#recipeEntry textarea {
+	border: solid 1px black;
+	height: 105px;
+	margin-bottom: 2px;
+	width: 200px;
+	background-color: #fcfcfc;
+}
+
+::-webkit-input-placeholder {
+   color: black;
+   padding-left: 6px;
+}
+:-moz-placeholder { /* Firefox 18- */
+   color: red;  
+   padding-left: 6px;
+}
+::-moz-placeholder {  /* Firefox 19+ */
+   color: red; 
+   padding-left: 6px; 
+}
+:-ms-input-placeholder {  
+   color: red; 
+   padding-left: 6px; 
+}

@@ -23,7 +23,7 @@ $(document).ready(function() {
 		}, 3500);
 		setTimeout(function() {
 			$('#notify').fadeIn();
-			$('#notify').html("&nbsp;");
+			$('#notify').html("All Recipes");
 		}, 4500);
 	});
 
@@ -34,9 +34,9 @@ $(document).ready(function() {
 	$(document).on('click', '.edit', function(e) {
 		e.preventDefault();
 		var menu = $(this).parent().prev();
-		menu.toggle();
+		menu.slideToggle(100);
 
-		$(document).mouseup(function (e) {
+		$(document).on('mouseup', function (e) {
 		    var container = menu;
 		    if (!container.is(e.target) // if the target of the click isn't the container...
 		        && container.has(e.target).length === 0) // ... nor a descendant of the container
@@ -157,7 +157,7 @@ $(document).ready(function() {
 
 						// RELOAD NOTES CORRECTLY
 						var parentRecipe = returnID.parent();
-						var newFormattedRecipe = $.trim(parentRecipe.find('.notes').html())
+						var newFormattedRecipe = $.trim(parentRecipe.find('.notes').html());
 						newFormattedRecipe = newFormattedRecipe.replace(/\n\r?/g, '<br>');
 						currentRecipe.find('.notes').html(newFormattedRecipe);
 						$('.notes').hide();
@@ -293,35 +293,33 @@ $(document).ready(function() {
 
 		var recordID = $(this).parent().prev().val();
 		console.log("Deleted Record ID: " + recordID);
-		var confirmation = confirm('Are you sure you want to delete this recipe?');
-		if (confirmation) {
+		//var confirmation = confirm('Are you sure you want to delete this recipe?');
+		//if (confirmation) {
 		   $.ajax({
 		        url: "/profile/delete/" + recordID,
 		        type: "GET"
 		    }).done(function() {
 				currentRecipe.remove();
 			});
-		} else {
+		//} else {
 			return;
-		}
+		//}
 	});
 
 
 	// Hover Color
-	$(document).on('mouseenter', '.rName', function() {
-		$(this).animate({"backgroundColor": "#effbfc"}, 120);
-		$(this).next().animate({"backgroundColor": "#effbfc"}, 120);
+	$(document).on('mouseenter', '.recipeEntry', function() {
+		$(this).animate({"backgroundColor": "#effbfc"}, 150);
+	}).on('mouseleave', '.recipeEntry', function() {
+		$(this).animate({"backgroundColor": "#FCFCFC"}, 150);
 	});
-	$(document).on('mouseout', '.rName', function() {
-		$(this).animate({"backgroundColor": "white"}, 170);
-		$(this).next().animate({"backgroundColor": "white"}, 170);
-	});
+
 
 	// Toggle Notes
 	$(document).on('click', '.noteToggler', function(e) {
 		e.preventDefault();
 		var note = $(this).parent().next();
-		note.toggle();
+		note.slideToggle(100);
 	});
 
 
@@ -339,11 +337,11 @@ $(document).ready(function() {
 	$(document).on('click', '#sortAZ', function(e) {
 		e.preventDefault();
 		$.get( "/profile/sortAZ", function() {
-		}).done(function() {
-			$.get( "/recipelist", function(data) {
-				$('.result').html(data);
-				$('.notes').hide();
-			});
+		}).done(function(data) {
+			$('.result').html(data);
+			$('.notes').hide();
+			$('#notify').hide().html("All Recipes").fadeIn(1000);
+			resetNotesFormat();
 		});
 	});
 
@@ -351,11 +349,11 @@ $(document).ready(function() {
 	$(document).on('click', '#sortZA', function(e) {
 		e.preventDefault();
 		$.get( "/profile/sortZA", function() {
-		}).done(function() {
-			$.get( "/recipelist", function(data) {
-				$('.result').html(data);
-				$('.notes').hide();
-			});
+		}).done(function(data) {
+			$('.result').html(data);
+			$('.notes').hide();
+			$('#notify').hide().html("All Recipes").fadeIn(1000);
+			resetNotesFormat();
 		});
 	});
 
@@ -367,8 +365,10 @@ $(document).ready(function() {
 	   $.ajax({
 	        url: "/profile/tags/" + tagName,
 	        type: "GET"
-	    }).done(function() {
-
+	    }).done(function(data) {
+			$('.result').html(data);
+			$('.notes').hide();
+			$('#notify').hide().html(tagName + " Recipes").fadeIn(1000);
 		});
 	});
 

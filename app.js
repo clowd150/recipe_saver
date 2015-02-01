@@ -52,51 +52,13 @@ app.use(sessions({
 app.use(function(req, res, next) {
 	if (req.session && req.session.user) {
 		User.findOne({ email: req.session.user.email }, function(err, user) {
-			if (err) console.log("ALERT!!! NO USER FOUND!!");
 			if (user) {
 				req.user = user;
 				delete req.user.password;
 				req.session.user = user;
 				res.locals.user = user;
-				if (res.locals.user.sortStyle == "default") {
-					Recipe.find({ user_id: res.locals.user.email }, function(err, recipes) {
-						if (err) throw err;
-						console.log("User::: " + res.locals.user.email);
-						console.log("THE RECIPES: " + recipes);
-						res.locals.user.recipes = recipes;
-						next();
-					});
-				} else if (res.locals.user.sortStyle == "ZA") {
-					Recipe.find({ user_id: req.session.user.email }).sort({recipeName: 1}).exec(function (err, recipes) {
-						if (err) throw err;
-						recipes.forEach(function(doc) {
-							res.locals.user.recipes = recipes;
-						});
-						console.log("ZA is now set");
-						next();
-					});
-				} else if (res.locals.user.sortStyle == "AZ") {
-					Recipe.find({ user_id: req.session.user.email }).sort({recipeName: -1}).exec(function (err, recipes) {
-						if (err) throw err;
-						recipes.forEach(function(doc) {
-							res.locals.user.recipes = recipes;
-						});
-						console.log("AZ is now set");
-						next();
-					});
-				} else {
-					Recipe.find({ user_id: req.session.user.email }, function(err, recipes) {
-						if (err) throw err;
-						recipes.forEach(function(doc) {
-							res.locals.user.recipes = recipes;
-						});
-						console.log("default2 is now set");
-						next();
-					});
-				}
-			} else {
-				console.log("ALERT!!! NO USER FOUND!!");
 			}
+			next();
 		});
 	} else {
 		next();
@@ -168,18 +130,24 @@ app.get('/dashboard', requireLogin, function(req, res) {
 
 app.get('/profile', requireLogin, function(req, res) {
 	res.render('profile.ejs'/*, { csrfToken: req.csrfToken() } */);
-	//console.log(req.session.user.email);
-	//console.log(req.session.user);
 });
 
 app.get('/recipelist', requireLogin, function(req, res) {
-	res.render('recipelist.ejs');
+	Recipe.find({ user_id: res.locals.user.email }).sort({_id: 1}).exec(function (err, records) {
+		if (err) throw err;
+		console.log("/RECIPELIST::: " + records);
+		res.locals.recipes = records;
+		res.render('recipelist.ejs', res.locals.recipes);
+	});
 });
 
 // POST RECIPE
 app.post('/profile', requireLogin, function(req, res) {
 	var formattedUrl = formatUrl(req);
 	var tagsArray = req.body.tags.split(',');
+	if (tagsArray[0] == "") {
+		tagsArray = [];
+	}
 	var recipe = new Recipe({
 		user_id: req.session.user.email,
 		recipeName: req.body.recipe,
@@ -256,41 +224,59 @@ app.get('/profile/delete/:recordID', requireLogin, function(req, res) {
 	});
 });
 
-// SORT BY TAGN 
+// SORT BY TAG
 app.get('/profile/tags/:tag', requireLogin, function(req, res) {
 	console.log("TAG NAME: " + req.params.tag);
-	// Recipe.remove({ _id: req.params.recordID }, function(err, recipe) {
-	// 	if (err) return console.error(err);
-	// 	console.log("params ID: "  + req.params.recordID);
-	// 	console.log(recipe + " doc was removed.");
-	// 	res.sendStatus(201);
-	// });
-});
-
-// SORT Z - A
-app.get('/profile/sortZA', function(req, res) {
-	User.findOne({ email: req.session.user.email }, function (err, user) {
-		user.sortStyle = "ZA";
-		user.save(function(rec) {
-			console.log("Sort style set to ZA");
-			console.log("Returned User" + user);
-			res.sendStatus(200);
-		});
+	Recipe.find({ user_id: req.session.user.email, tags: { "$in": [req.params.tag] } }).sort({recipeName: 1}).exec(function (err, recipes) {
+		console.log("TAGGED RECIPE RESULTS: "  + recipes);
+		res.locals.recipes = recipes;
+		res.render('filteredrecipes.ejs', res.locals.recipes);
 	});
 });
 
 // SORT A - Z
 app.get('/profile/sortAZ', function(req, res) {
-	User.findOne({ email: req.session.user.email }, function (err, user) {
-		user.sortStyle = "AZ";
-		user.save(function(rec) {
-			console.log("Sort style set to AZ");
-			console.log("Returned User" + user);
-			res.sendStatus(200);
+	Recipe.find({ user_id: req.session.user.email }).sort({recipeName: 1}).exec(function (err, recipes) {
+		if (err) throw err;
+		recipes.sort(function(a, b){
+			var nameA = a.recipeName.toLowerCase(), nameB = b.recipeName.toLowerCase()
+			if (nameB < nameA) {//sort string ascending
+				return -1;
+			}
+			if (nameB > nameA) {
+				return 1;
+			}
+			return 0 //default return value (no sorting)
 		});
+		res.locals.recipes = recipes;
+		console.log("RECIPS" + res.locals.recipes);
+		res.render('filteredrecipes.ejs', res.locals.recipes);
 	});
 });
 
+
+// SORT Z - A
+app.get('/profile/sortZA', function(req, res) {
+	Recipe.find({ user_id: req.session.user.email }).sort({recipeName: -1}).exec(function (err, recipes) {
+		if (err) throw err;
+		recipes.sort(function(a, b){
+			var nameA = a.recipeName.toLowerCase(), nameB = b.recipeName.toLowerCase()
+			if (nameA < nameB) {//sort string ascending
+				return -1;
+			}
+			if (nameA > nameB) {
+				return 1;
+			}
+			return 0 //default return value (no sorting)
+		});
+		res.locals.recipes = recipes;
+		console.log("RECIPS" + res.locals.recipes);
+		res.render('filteredrecipes.ejs', res.locals.recipes);
+	});
+});
+
+
+		
 
 app.get('/logout', function(req, res) {
 	req.session.reset();
