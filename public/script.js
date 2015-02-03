@@ -36,7 +36,7 @@ $(document).ready(function() {
 		var menu = $(this).parent().prev();
 		menu.slideToggle(100);
 
-		$(document).on('mouseup', function (e) {
+		$(document).one('mouseup', function (e) {
 		    var container = menu;
 		    if (!container.is(e.target) // if the target of the click isn't the container...
 		        && container.has(e.target).length === 0) // ... nor a descendant of the container
@@ -71,7 +71,7 @@ $(document).ready(function() {
 		var recordID = $(this).parent().prev().val();
 		console.log(recordID);
 
-		$(document).mouseup(function(event){
+		$(document).one('mouseup', function (event) {
 		    var target = $("#newname");
 		    if (!target.is(event.target) && target.is(":visible")) {
 		       target.parent().html(nameClone);
@@ -132,7 +132,7 @@ $(document).ready(function() {
 		var recordID = $(this).parent().prev().val();
 		console.log(recordID);
 
-		$(document).mouseup(function(event){
+		$(document).one('mouseup', function (event) {
 		    var target = $("#newurl");
 		    if (!target.is(event.target) && target.is(":visible")) {
 		       target.parent().html(urlClone2);
@@ -372,5 +372,69 @@ $(document).ready(function() {
 		});
 	});
 
+	// Edit Tag
+	var tagContainer;
+	var tagsClone;
+	$(document).on('click', '.editTag', function(e) {
+		e.preventDefault();
+		var tags = $(this).parent().find('.aTag');
+		tagsClone = $(this).parent().html();
+
+		var editImage = $(this);
+		console.log("editImage: " + editImage.html());
+		editImage.hide();
+
+		tags.each(function(index) {
+			$(this).append("<img class='x' src='x.png'>")
+			var parentTag = $(this).find('a').parent();
+			console.info(parentTag.html());
+			parentTag.removeClass('aTag');
+			parentTag.addClass('aTagEdit');
+			parentTag.find('a').contents().unwrap();
+		});
+		tagContainer = $(this).parent();
+
+		$(document).one('mouseup', function (e) {
+		    console.log(tagContainer.html())
+		    if (!$('.x').is(e.target)) // Kind of a hack, but it works
+		    {
+		        console.warn("cliclekd")
+		        tagContainer.html(tagsClone);
+		    }
+		});
+
+	});
+
+	// Remove Tag
+	$(document).on('click', '.x', function(e) {
+	 	e.preventDefault();
+	 	var recordID = $(this).parent().parent().parent().find('input').val();
+	 	var tagToSend = $(this).parent().text();
+	 	//$(this).parent().remove();
+	 	var currentRecipe = $(this).parent().parent().parent();
+	 	//console.warn(currentRecipe.html());
+	 	
+	 	$.ajax({
+		        url: "/deletetag/" + recordID,
+		        type: "GET",
+		        data: {tag: tagToSend}
+		    }).done(function() {
+		    	$.get( "/recipelist", function(data) {
+		    		var response = $(data);
+		    		var returnID = response.find("#" + recordID);
+		    		var parentRecipe = returnID.parent().html();
+					currentRecipe.html(parentRecipe);
+					$('.space').replaceWith("<a class='edit' href='#'><img src='edit.png' class='editImage'></a>");
+
+					// RELOAD NOTES CORRECTLY
+					var parentRecipe = returnID.parent();
+					var newFormattedRecipe = $.trim(parentRecipe.find('.notes').html());
+					newFormattedRecipe = newFormattedRecipe.replace(/\n\r?/g, '<br>');
+					currentRecipe.find('.notes').html(newFormattedRecipe);
+					$('.notes').hide();
+				});
+		});
+		
+	});
 
 });

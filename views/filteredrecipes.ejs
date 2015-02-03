@@ -35,13 +35,15 @@
 						</div>
 					</div>
 				<% } %>
+				<div class="tags">
 				<% if (recipes[i].tags.length >= 1) { %>
-					<div class="tags">
+					
 						<% for (var j=0; j<recipes[i].tags.length; j++) { %>
 							<span class="aTag"><a href="#"><%= recipes[i].tags[j] %></a></span>
 		    			<% } %>
-					</div>
+		    			<img class="editTag" src="tagicon.png">
 				<% } %>
+				</div>
 			</div>
 	    <% } %>
 	<% } else { %>

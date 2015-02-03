@@ -144,7 +144,7 @@ app.get('/recipelist', requireLogin, function(req, res) {
 // POST RECIPE
 app.post('/profile', requireLogin, function(req, res) {
 	var formattedUrl = formatUrl(req);
-	var tagsArray = req.body.tags.split(',');
+	var tagsArray = req.body.tags.split(', ');
 	if (tagsArray[0] == "") {
 		tagsArray = [];
 	}
@@ -274,6 +274,17 @@ app.get('/profile/sortZA', function(req, res) {
 		res.render('filteredrecipes.ejs', res.locals.recipes);
 	});
 });
+
+
+// DELETE TAG
+app.get('/deletetag/:recordID', requireLogin, function(req, res) {
+	Recipe.update({ _id: req.params.recordID }, { $pull: {tags: req.query.tag} }, function(err, tag) {
+		if (err) return console.error(err);
+		console.log("Removed " + tag + " tag");
+		res.sendStatus(201);
+	});
+});
+
 
 
 		
