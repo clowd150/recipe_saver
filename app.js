@@ -286,7 +286,19 @@ app.get('/deletetag/:recordID', requireLogin, function(req, res) {
 });
 
 
-
+// ADD NEW TAG
+app.post('/updatetagname/:recordID', requireLogin, function(req, res) {
+	console.log(req.body.newtag);
+	var newtags = req.body.newtag.split(', ');
+	if (newtags[0] == "") {
+		newtags = [];
+	}
+	Recipe.update({ _id: req.params.recordID }, { $pushAll: {tags: newtags} }, function(err, tag) {
+		if (err) return console.error(err);
+		console.log("Added " + tag + " tag");
+		res.sendStatus(201);
+	});
+});
 		
 
 app.get('/logout', function(req, res) {

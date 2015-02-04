@@ -377,11 +377,13 @@ $(document).ready(function() {
 	var tagsClone;
 	$(document).on('click', '.editTag', function(e) {
 		e.preventDefault();
+		$('.editTag').hide();
+
 		var tags = $(this).parent().find('.aTag');
 		tagsClone = $(this).parent().html();
 
-		var editImage = $(this);
-		console.log("editImage: " + editImage.html());
+		var editImage = $(this); //(The actual tag image)
+		var test = editImage.parent().prepend("<img class='plus' src='plus.png'>");
 		editImage.hide();
 
 		tags.each(function(index) {
@@ -392,14 +394,25 @@ $(document).ready(function() {
 			parentTag.addClass('aTagEdit');
 			parentTag.find('a').contents().unwrap();
 		});
+
 		tagContainer = $(this).parent();
+		var plusSign = $(this).parent().find('.plus');
+
+		var recordID = $(this).parent().parent().find('input').val();
+		console.info(recordID);
+
+		var currentRecipe = $(this).parent().parent();
 
 		$(document).one('mouseup', function (e) {
 		    console.log(tagContainer.html())
-		    if (!$('.x').is(e.target)) // Kind of a hack, but it works
-		    {
-		        console.warn("cliclekd")
+			if ($('.x').is(e.target)) {
+		    	console.info("fine and dandy");
+		    } else if ($('.plus').is(e.target)) {
+		    	addTag(plusSign, recordID, currentRecipe, tagContainer, tagsClone);
+		    } else {
+		    	console.warn("cliclekd");
 		        tagContainer.html(tagsClone);
+		        $('.editTag').show();
 		    }
 		});
 
@@ -432,9 +445,51 @@ $(document).ready(function() {
 					newFormattedRecipe = newFormattedRecipe.replace(/\n\r?/g, '<br>');
 					currentRecipe.find('.notes').html(newFormattedRecipe);
 					$('.notes').hide();
+					$('.editTag').show();
 				});
 		});
-		
 	});
+
+	// Add New Tag
+	function addTag(plusSign, recordID, currentRecipe, tagContainer, tagsClone) {
+		plusSign.replaceWith("<input id='newtag' type='text' name='newtag'>");
+		$('#newtag').focus();
+
+		var mousetracker = true;
+		$(document).on('mouseup', function (e) {
+			if (!$('#newtag').is(e.target) && mousetracker) {
+				mousetracker = false;
+				console.warn('d');
+				tagContainer.html(tagsClone);
+				$('.editTag').show();
+		    } 
+		});
+
+		$('#newtag').keydown(function (e){
+			if(e.keyCode == 13) {
+				$.ajax({
+			        url: "/updatetagname/" + recordID,
+			        type: "POST",
+			        data: $('#newtag').serialize()
+			    }).done(function() {
+			    	$.get( "/recipelist", function(data) {
+			    		var response = $(data);
+			    		var returnID = response.find("#" + recordID);
+			    		var parentRecipe = returnID.parent().html();
+						currentRecipe.html(parentRecipe);
+						$('.space').replaceWith("<a class='edit' href='#'><img src='edit.png' class='editImage'></a>");
+
+						// RELOAD NOTES CORRECTLY
+						var parentRecipe = returnID.parent();
+						var newFormattedRecipe = $.trim(parentRecipe.find('.notes').html());
+						newFormattedRecipe = newFormattedRecipe.replace(/\n\r?/g, '<br>');
+						currentRecipe.find('.notes').html(newFormattedRecipe);
+						$('.notes').hide();
+						$('.editTag').show();
+					});
+			    });
+			}
+		});
+	}
 
 });

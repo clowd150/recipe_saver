@@ -85,7 +85,6 @@
 			font-family: Tahoma, sans-serif;
 		}
 		.tags {
-			width: 600px;
 			border: solid 0px green;
 			line-height: 1.6em;
 			font-size: 0.8em;
@@ -96,6 +95,10 @@
 			border: solid 1px #B1B2B0;
 			padding: 3px;
 			background-color: #BBBBBB;
+			margin-right: 1px;
+			display: inline-block;
+			height: 13px;
+			line-height: 13px;
 		}
 		.aTag a {
 			color: white;
@@ -130,6 +133,15 @@
 			border: solid 1px #B1B2B0;
 			padding: 3px;
 			background-color: #eaeaea;
+			display: inline-block;
+			height: 13px;
+			line-height: 13px;
+		}
+		.plus {
+			margin-right: 4px;
+		}
+		#newtag {
+			width: 75px;
 		}
 		/*
 		.mainRecipes {
@@ -149,7 +161,7 @@
 			<input type="text" name="recipe" placeholder="Recipe Name" required><br>
 			<input type="text" name="url" placeholder="URL"><br>
 			<textarea name="notes" placeholder="Notes"></textarea><br>
-			<input type="text" name="tags" placeholder="Tags (Comma Separated)"><br>
+			<input type="text" name="tags" placeholder="Tags (comma separated)"><br>
 			<input id="submitRecipe" type="submit">
 		</form>
 		<br>
