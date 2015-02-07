@@ -21,7 +21,7 @@
 				<% if (recipes[i].notes) { %>
 					<div class="existingNote">
 						<div class="noteIndicator">
-							<a href="#" class="noteToggler">Expand Notes</a>
+							<a href="#" class="noteToggler">Show Notes</a>
 						</div>
 						<div class="notes">
 							<%= recipes[i].notes %>
@@ -39,9 +39,11 @@
 				<% if (recipes[i].tags.length >= 1) { %>
 					
 						<% for (var j=0; j<recipes[i].tags.length; j++) { %>
-							<span class="aTag"><a href="#"><%= recipes[i].tags[j] %></a></span>
+							<div class="aTag"><a href="#"><%= recipes[i].tags[j] %></a></div>
 		    			<% } %>
 		    			<img class="editTag" src="tagicon.png">
+				<% } else { %>
+					<img class="editTag" src="tagicon.png">
 				<% } %>
 				</div>
 			</div>

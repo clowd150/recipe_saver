@@ -1,8 +1,10 @@
 <html>
 <head>
+	<!DOCTYPE html>
 	<meta charset="UTF-8">
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+	<script src="jquery-1.11.2.min.js"></script>
 	<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/jquery-ui.min.js"></script>
+	<link href='http://fonts.googleapis.com/css?family=Inconsolata' rel='stylesheet' type='text/css'>
 	<style>
 		body {
 			font-family: 'Raleway', sans-serif;
@@ -54,6 +56,7 @@
 			clear: both;
 			margin-left: 20px;
 			margin-bottom: 3px;
+			white-space: nowrap;
 		}
 		.URL a {
 			color: #07a;
@@ -62,27 +65,44 @@
 			margin-bottom: 5px;
 		}
 		.noteIndicator a {
-			color: #2AAD0E;
+			color: #40C649;
 			font-size: .9em;
 		}
 		.notes {
-			border: solid 1px yellow;
-			width: 538px;
+			border: solid 1px #0077AA;
+			width: 531px;
 			margin-bottom: 11px;
+			background-color: #F7F8FF;
+			font-family: 'Inconsolata';
+			padding: 7px 7px 7px 10px;
 		}
 		.noNotes {
 			border: solid 0px red;
 			width: 700px;
 		}
+		#newname {
+			border: solid 1px black;
+			width: 551px;
+			background-color: white;
+		}
+		#newurl {
+			border: solid 1px black;
+			width: 551px;
+			background-color: white;
+		}
 		#sortMenu {
 			margin-left: 124px;
 		}
 		#newnote {
-			width: 600px;
+			width: 546px;
 			height: 120px;
 			border: 3px solid #cccccc;
 			padding: 5px;
-			font-family: Tahoma, sans-serif;
+			font-family: 'Inconsolata';
+		}
+		#newNoteSubmit, #cancel {
+			margin-top: 1px;
+			margin-bottom: 3px;
 		}
 		.tags {
 			border: solid 0px green;
@@ -99,6 +119,7 @@
 			display: inline-block;
 			height: 13px;
 			line-height: 13px;
+			margin-top: 3px;
 		}
 		.aTag a {
 			color: white;

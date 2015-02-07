@@ -1,4 +1,6 @@
 $(document).ready(function() {
+	$.ajaxSetup({ cache: false }); //IMPORTANT: Needed for IE!
+
 	// Post Recipe
 	$(document).on('click', '#submitRecipe', function(e) {
 		e.preventDefault();
@@ -71,7 +73,7 @@ $(document).ready(function() {
 		var recordID = $(this).parent().prev().val();
 		console.log(recordID);
 
-		$(document).one('mouseup', function (event) {
+		$(document).on('mouseup', function (event) {
 		    var target = $("#newname");
 		    if (!target.is(event.target) && target.is(":visible")) {
 		       target.parent().html(nameClone);
@@ -89,8 +91,8 @@ $(document).ready(function() {
 			    	$.get( "/recipelist", function(data) {
 			    		var response = $(data);
 			    		var returnID = response.find("#" + recordID);
-			    		//alert(returnID.val());
 			    		var parentRecipe = returnID.parent().html();
+			    		//alert(parentRecipe);
 						currentRecipe.html(parentRecipe);
 						$('.space').replaceWith("<a class='edit' href='#'><img src='edit.png' class='editImage'></a>");
 						resetNotesFormat();
@@ -132,11 +134,13 @@ $(document).ready(function() {
 		var recordID = $(this).parent().prev().val();
 		console.log(recordID);
 
-		$(document).one('mouseup', function (event) {
+
+		$(document).on('mouseup', function (event) {
 		    var target = $("#newurl");
 		    if (!target.is(event.target) && target.is(":visible")) {
-		       target.parent().html(urlClone2);
-		       $('.space').replaceWith("<a class='edit' href='#'><img src='edit.png' class='editImage'></a>");
+		    	console.warn('d');
+		        target.parent().html(urlClone2);
+		        $('.space').replaceWith("<a class='edit' href='#'><img src='edit.png' class='editImage'></a>");
 		    }
 		});
 	
@@ -202,7 +206,7 @@ $(document).ready(function() {
 
 			var noteParent = $(this).parent().next().next().next();
 			console.log("noteParent: " + noteParent.html());
-			noteParent.html("<textarea id='newnote' name='newnote'></textarea><button id='newNoteSubmit'>Save</button><button id='cancel'>Cancel</button>");
+			noteParent.html("<textarea id='newnote' name='newnote'></textarea><br><button id='newNoteSubmit'>Save</button><button id='cancel'>Cancel</button>");
 			$('#newnote').val(noteValue2);
 			
 			noteRecordID = $(this).parent().prev().val();
@@ -213,7 +217,7 @@ $(document).ready(function() {
 			$('.editImage').replaceWith("<span class='space'>&nbsp;&nbsp;&nbsp;&nbsp;<span>");
 			var noteValue = $(this).parent().next().next().next().find("*").next().html();
 			var noteParent = $(this).parent().next().next().next();
-			noteParent.html("<textarea id='newnote' name='newnote'></textarea><button id='newNoteSubmit2'>Save</button><button id='cancel'>Cancel</button>");
+			noteParent.html("<textarea id='newnote' name='newnote'></textarea><br><button id='newNoteSubmit2'>Save</button><button id='cancel'>Cancel</button>");
 			//$('#newnote').val(noteValue);
 
 			noteRecordID = $(this).parent().prev().val();
@@ -319,6 +323,15 @@ $(document).ready(function() {
 	$(document).on('click', '.noteToggler', function(e) {
 		e.preventDefault();
 		var note = $(this).parent().next();
+		console.log("Note: " + note.html());
+
+		var noteLink = note.parent().find('a');
+		console.log(noteLink.html());
+		if (noteLink.text() == "Show Notes") {
+		 	noteLink.text("Hide Notes");
+		} else {
+			noteLink.text("Show Notes");
+		}
 		note.slideToggle(100);
 	});
 
