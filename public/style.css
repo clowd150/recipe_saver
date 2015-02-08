@@ -1,5 +1,5 @@
 #recipeEntry input {
-	border: solid 1px black;
+	border: solid 1px #E4E4E4;
 	margin-bottom: 2px;
 	width: 200px;
 	background-color: #fcfcfc;
@@ -7,26 +7,35 @@
 }
 
 #recipeEntry textarea {
-	border: solid 1px black;
+	border: solid 1px #E4E4E4;
 	height: 105px;
 	margin-bottom: 2px;
 	width: 200px;
 	background-color: #fcfcfc;
 }
 
+#recipeEntry input[type=submit] {
+	background-color: #FCFCFC;
+	border: solid 1px rgb(187, 187, 187);
+}
+
+#recipeEntry input[type=submit]:hover {
+	background-color: rgb(229, 247, 231);
+}
+
 ::-webkit-input-placeholder {
-   color: black;
+   color: rgb(187, 187, 187);
    padding-left: 6px;
 }
 :-moz-placeholder { /* Firefox 18- */
-   color: red;  
+   color: rgb(187, 187, 187);  
    padding-left: 6px;
 }
 ::-moz-placeholder {  /* Firefox 19+ */
-   color: red; 
+   color: rgb(187, 187, 187); 
    padding-left: 6px; 
 }
 :-ms-input-placeholder {  
-   color: red; 
+   color: rgb(187, 187, 187); 
    padding-left: 6px; 
 }

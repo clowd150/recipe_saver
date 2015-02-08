@@ -100,7 +100,7 @@ app.post('/register', function(req, res) {
 
 			res.render('register.ejs', { error: error });
 		} else {
-			res.redirect('/dashboard');
+			res.redirect('/profile');
 		}
 	});
 });
@@ -116,7 +116,7 @@ app.post('/login', function(req, res) {
 		} else {
 			if (bcrypt.compareSync(req.body.password, user.password)) {
 				req.session.user = user; //set-cookie: session={email: ..., password: ..., ..}
-				res.redirect('/dashboard');
+				res.redirect('/profile');
 			} else {
 				res.render('login.ejs', { error: 'Invalid email or password.'});				
 			}
@@ -124,8 +124,8 @@ app.post('/login', function(req, res) {
 	});
 });
 
-app.get('/dashboard', requireLogin, function(req, res) {
-	res.render('dashboard.ejs');
+app.get('/profile', requireLogin, function(req, res) {
+	res.render('profile.ejs');
 });
 
 app.get('/profile', requireLogin, function(req, res) {

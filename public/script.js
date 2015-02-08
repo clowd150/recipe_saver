@@ -20,6 +20,7 @@ $(document).ready(function() {
 		});
 		$('#recipeEntry')[0].reset();
 		$('#notify').hide().html("Recipe posted! :-)").fadeIn(1000);
+		resetSorting();
 		setTimeout(function() {
 			$('#notify').fadeOut(1000);
 		}, 3500);
@@ -313,7 +314,7 @@ $(document).ready(function() {
 
 	// Hover Color
 	$(document).on('mouseenter', '.recipeEntry', function() {
-		$(this).animate({"backgroundColor": "#effbfc"}, 150);
+		$(this).animate({"backgroundColor": "#EBFCED"}, 150);
 	}).on('mouseleave', '.recipeEntry', function() {
 		$(this).animate({"backgroundColor": "#FCFCFC"}, 150);
 	});
@@ -337,13 +338,19 @@ $(document).ready(function() {
 
 
 	// Implement line breaks in notes field
-	resetNotesFormat();
 	function resetNotesFormat() {
 		$(".notes").each(function(index) {
 			var noteText = $.trim($(this).html());
 			var noteTextFormated = noteText.replace(/\n\r?/g, '<br>');
 			$(this).html(noteTextFormated);
 		});
+	}
+
+	// Show Sorting Links
+	resetSorting();
+	function resetSorting() {
+		$('#sortAZ').show();
+		$('#sortZA').show();
 	}
 
 	// Sort A - Z
@@ -353,7 +360,7 @@ $(document).ready(function() {
 		}).done(function(data) {
 			$('.result').html(data);
 			$('.notes').hide();
-			$('#notify').hide().html("All Recipes").fadeIn(1000);
+			$('#notify').hide().html("Sorted (A - Z)").fadeIn(1000);
 			resetNotesFormat();
 		});
 	});
@@ -365,8 +372,21 @@ $(document).ready(function() {
 		}).done(function(data) {
 			$('.result').html(data);
 			$('.notes').hide();
+			$('#notify').hide().html("Sorted (Z - A)").fadeIn(1000);
+			resetNotesFormat();
+		});
+	});
+
+	// All recipes
+	$(document).on('click', '#allRecipes', function(e) {
+		e.preventDefault();
+		$.get( "/recipelist", function() {
+		}).done(function(data) {
+			$('.result').html(data);
+			$('.notes').hide();
 			$('#notify').hide().html("All Recipes").fadeIn(1000);
 			resetNotesFormat();
+			 resetSorting();
 		});
 	});
 
@@ -380,8 +400,11 @@ $(document).ready(function() {
 	        type: "GET"
 	    }).done(function(data) {
 			$('.result').html(data);
+			resetNotesFormat();
 			$('.notes').hide();
 			$('#notify').hide().html(tagName + " Recipes").fadeIn(1000);
+			$('#sortAZ').hide();
+			$('#sortZA').hide();
 		});
 	});
 
@@ -390,7 +413,8 @@ $(document).ready(function() {
 	var tagsClone;
 	$(document).on('click', '.editTag', function(e) {
 		e.preventDefault();
-		$('.editTag').hide();
+
+		$(this).hide();
 
 		var tags = $(this).parent().find('.aTag');
 		tagsClone = $(this).parent().html();

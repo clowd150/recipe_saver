@@ -18,9 +18,14 @@
 		}
 		#wrapper {
 			border: solid 1px black;
-			width: 800px;
+			width: 906px;
 			margin: 0 auto;
 			padding: 0 20px 0 20px;
+			min-height: 1057px;
+		}
+		#recipeEntry {
+			border: solid 0px red;
+			width: 200px;
 		}
 		.editImage {
 			margin-right: 3px;
@@ -59,21 +64,21 @@
 			white-space: nowrap;
 		}
 		.URL a {
-			color: #07a;
+			color: #93C3D8;
 		}
 		.noteIndicator {
 			margin-bottom: 5px;
 		}
 		.noteIndicator a {
-			color: #40C649;
+			color: #28AD30;
 			font-size: .9em;
 		}
 		.notes {
-			border: solid 1px #0077AA;
+			border: solid 1px #93C3D8;
 			width: 531px;
 			margin-bottom: 11px;
 			background-color: #F7F8FF;
-			font-family: 'Inconsolata';
+			font-size: 0.9em;
 			padding: 7px 7px 7px 10px;
 		}
 		.noNotes {
@@ -90,15 +95,12 @@
 			width: 551px;
 			background-color: white;
 		}
-		#sortMenu {
-			margin-left: 124px;
-		}
 		#newnote {
 			width: 546px;
 			height: 120px;
 			border: 3px solid #cccccc;
 			padding: 5px;
-			font-family: 'Inconsolata';
+			font-size: 0.9em;
 		}
 		#newNoteSubmit, #cancel {
 			margin-top: 1px;
@@ -132,10 +134,6 @@
 			margin-left: 20px;
 			width: 600px;		
 		}
-		#notifyParent {
-			border: solid 1px gray;
-			height: 25px;
-		}
 		.recipeEntry {
 			margin: 0 auto 15px auto;
 			border: solid 1px #EEE;
@@ -164,39 +162,105 @@
 		#newtag {
 			width: 75px;
 		}
-		/*
-		.mainRecipes {
-			margin: 0 auto;
-			border: solid 1px red;
+		#sideEntry {
+			border: solid 0px blue;
+			float: left;
+			margin-top: -60px;
 		}
-		*/
+		#sideEntry h2 {
+			text-align: center;
+		}
+		.mainRecipes {
+			margin-left: 225px;
+			border: solid 0px red;
+		}
+		#topBar {
+			border: solid 1px rgb(238, 238, 238);
+			height: 27px;
+			width: 612px;
+			margin-left: 258px;
+			margin-bottom: 30px;
+		}
+		#sortMenu {
+			border: solid 0px blue;
+			width: 300px;
+			float: left;
+			height: 25px;
+			line-height: 25px;
+			padding-left: 10px;
+		}
+		#sortMenu ul {
+			margin: 0;
+			padding: 0;
+		}
+		#sortMenu li {
+			display: inline-block;
+			margin-right: 12px;
+		}
+		#notifyParent {
+			border: solid 0px gray;
+			padding-right: 10px;
+			height: 25px;
+			line-height: 25px;
+			width: 200px;
+			float: right;
+			text-align: right;
+			color: rgb(64, 198, 73);;
+		}
+		header {
+			border: solid 0px yellow;
+			height: 134px;
+		}
+		#logo {
+			border: solid 0px blue;
+			float: left;
+		}
+		header h1 {
+			border: solid 0px red;
+			width: 612px;
+			float: left;
+			margin-left: 121px;
+			margin-top: 46px;
+			text-align: center;
+		}
+		#noRecipes {
+			margin-left: 32px;
+		}
 	</style>
 	<link rel="stylesheet" type="text/css" href="style.css">
 </head>
 <body>
 	<div id="wrapper">
-		<img src="logo.png">
-		<h1>Profile</h1>
-		<h2>Create a Recipe</h2>
-		<form id="recipeEntry">
-			<input type="text" name="recipe" placeholder="Recipe Name" required><br>
-			<input type="text" name="url" placeholder="URL"><br>
-			<textarea name="notes" placeholder="Notes"></textarea><br>
-			<input type="text" name="tags" placeholder="Tags (comma separated)"><br>
-			<input id="submitRecipe" type="submit">
-		</form>
-		<br>
-		<div id="notifyParent">
-			<div id="notify">
-				All Recipes
+		<header>
+			<img id="logo" src="logo.png">
+			<h1><%= user.firstName %>'s Recipe Collection</h1>
+		</header>
+		<div id="topBar">
+			<div id="sortMenu">
+				<ul>
+					<li><a href="#" id="allRecipes">All Recipes</a></li>
+					<li><a href="#" id="sortAZ">Sort A - Z</a></li>
+					<li><a href="#" id="sortZA">Sort Z - A</a></li>
+				</ul>
+			</div>
+			<div id="notifyParent">
+				<div id="notify">
+					All Recipes
+				</div>
 			</div>
 		</div>
-		<br>
-		<div id="sortMenu">
-			<a href="#" id="sortAZ">Sort A - Z</a>
-			<a href="#" id="sortZA">Sort Z - A</a>
+		<div style="clear"></div><!--clearing div -->
+		<div id="sideEntry">
+			<h2>Log a Recipe</h2>
+			<form id="recipeEntry">
+				<input type="text" name="recipe" placeholder="Recipe Name" required><br>
+				<input type="text" name="url" placeholder="URL"><br>
+				<textarea name="notes" placeholder="Notes"></textarea><br>
+				<input type="text" name="tags" placeholder="Tags (comma separated)"><br>
+				<input id="submitRecipe" type="submit">
+			</form>
 			<br>
-			<br>
+			<img src="adtest.jpg">
 		</div>
 		<div class="mainRecipes">
 			<div class="result">
