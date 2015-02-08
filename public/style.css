@@ -21,6 +21,7 @@
 
 #recipeEntry input[type=submit]:hover {
 	background-color: rgb(229, 247, 231);
+	border: solid 1px #47C454;
 }
 
 ::-webkit-input-placeholder {

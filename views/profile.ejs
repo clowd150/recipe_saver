@@ -167,9 +167,6 @@
 			float: left;
 			margin-top: -60px;
 		}
-		#sideEntry h2 {
-			text-align: center;
-		}
 		.mainRecipes {
 			margin-left: 225px;
 			border: solid 0px red;
@@ -214,17 +211,35 @@
 		#logo {
 			border: solid 0px blue;
 			float: left;
+			margin: 14px 0 0 49px;
 		}
 		header h1 {
 			border: solid 0px red;
 			width: 612px;
 			float: left;
-			margin-left: 121px;
+			margin-left: 20px;
 			margin-top: 46px;
 			text-align: center;
 		}
 		#noRecipes {
 			margin-left: 32px;
+		}
+		#sideEntryTop {
+			border: solid 0px red;
+			height: 29px;
+			margin-top: 15px;
+		}
+		#sideEntryTop img {
+			float: left;
+			height: 27px;
+			border: solid 0px blue;
+		}
+		#sideEntry h2 {
+			border: solid 0px yellow;
+			float: left;
+			display: table-cell;
+			margin-top: 0;
+			margin-left: 10px;
 		}
 	</style>
 	<link rel="stylesheet" type="text/css" href="style.css">
@@ -234,6 +249,8 @@
 		<header>
 			<img id="logo" src="logo.png">
 			<h1><%= user.firstName %>'s Recipe Collection</h1>
+			<img src="hat.png">
+			<img src="logout.png">
 		</header>
 		<div id="topBar">
 			<div id="sortMenu">
@@ -251,7 +268,10 @@
 		</div>
 		<div style="clear"></div><!--clearing div -->
 		<div id="sideEntry">
-			<h2>Log a Recipe</h2>
+			<div id="sideEntryTop">
+				<img src="console.png">
+				<h2>Log a Recipe</h2>
+			</div>
 			<form id="recipeEntry">
 				<input type="text" name="recipe" placeholder="Recipe Name" required><br>
 				<input type="text" name="url" placeholder="URL"><br>
