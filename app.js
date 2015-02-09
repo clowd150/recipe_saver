@@ -4,6 +4,7 @@ var bcrypt = require('bcryptjs');
 //var csrf = require('csurf');
 var mongoose = require('mongoose');
 var sessions = require('client-sessions');
+var uriUtil = require('mongodb-uri');
 
 var url = require('url');
 
@@ -13,7 +14,13 @@ var ObjectId = Schema.ObjectId;
 var port = process.env.PORT || 3000;
 
 //CONNECT TO MONGO
-mongoose.connect('mongodb://localhost/auth');
+if (!process.env.PORT) {
+	mongoose.connect('mongodb://localhost/auth');
+} else {
+	var mongodbURI = "mongodb://heroku_app33846167:olsihqecng2qs1r0ut66tmob28@ds041831.mongolab.com:41831/heroku_app33846167";
+	var mongooseUri = uriUtil.formatMongoose(mongodbUri);
+	mongoose.connect(mongooseUri, options);
+}
 
 //User is a mongoose model (meaning it represents a user in the database). Then specify a schema, which is how the data is going to be represented in the db. List the fields and what type of value they are. The id is the value that MongoDB provides us.
 var User = mongoose.model('User', new Schema({
