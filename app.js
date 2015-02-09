@@ -12,6 +12,8 @@ var Schema = mongoose.Schema; //allows use to define our schema
 var ObjectId = Schema.ObjectId;
 
 var port = process.env.PORT || 3000;
+var options = { server: { socketOptions: { keepAlive: 1, connectTimeoutMS: 30000 } }, 
+	replset: { socketOptions: { keepAlive: 1, connectTimeoutMS : 30000 } } };
 
 //CONNECT TO MONGO
 if (!process.env.PORT) {
