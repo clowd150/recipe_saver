@@ -1,0 +1,31 @@
+{
+  "name": "recipe_saver",
+  "version": "0.0.0",
+  "description": "A place for your favorite recipes.",
+  "main": "app.js",
+  "dependencies": {
+    "bcryptjs": "^2.1.0",
+    "body-parser": "^1.10.1",
+    "client-sessions": "^0.7.0",
+    "csurf": "^1.6.5",
+    "ejs": "^2.0.8",
+    "express": "^4.10.7",
+    "jade": "^1.8.2",
+    "mongoose": "^3.8.21",
+    "url": "^0.10.2"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/doctafaustus/recipe_saver.git"
+  },
+  "author": "Bill Coloe",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/doctafaustus/recipe_saver/issues"
+  },
+  "homepage": "https://github.com/doctafaustus/recipe_saver"
+}

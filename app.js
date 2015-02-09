@@ -10,6 +10,8 @@ var url = require('url');
 var Schema = mongoose.Schema; //allows use to define our schema
 var ObjectId = Schema.ObjectId;
 
+var port = process.env.PORT || 3000;
+
 //CONNECT TO MONGO
 mongoose.connect('mongodb://localhost/auth');
 
@@ -306,7 +308,7 @@ app.post('/updatetagname/:recordID', requireLogin, function(req, res) {
 });
 
 
-app.listen(3000, function(req, res) {
+app.listen(port, function(req, res) {
 	console.log('App listening on port 3000');
 });
 
