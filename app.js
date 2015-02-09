@@ -124,6 +124,11 @@ app.post('/login', function(req, res) {
 	});
 });
 
+app.get('/logout', function(req, res) {
+	req.session.reset();
+	res.redirect('/');
+});
+
 app.get('/profile', requireLogin, function(req, res) {
 	res.render('profile.ejs');
 });
@@ -298,12 +303,6 @@ app.post('/updatetagname/:recordID', requireLogin, function(req, res) {
 		console.log("Added " + tag + " tag");
 		res.sendStatus(201);
 	});
-});
-		
-
-app.get('/logout', function(req, res) {
-	req.session.reset();
-	res.redirect('/');
 });
 
 

@@ -64,7 +64,7 @@
 			white-space: nowrap;
 		}
 		.URL a {
-			color: #93C3D8;
+			color: #C8D4DA;
 		}
 		.noteIndicator {
 			margin-bottom: 5px;
@@ -186,6 +186,9 @@
 			line-height: 25px;
 			padding-left: 10px;
 		}
+		#sortMenu a:hover {
+			color: rgb(40, 173, 48);
+		}
 		#sortMenu ul {
 			margin: 0;
 			padding: 0;
@@ -213,13 +216,12 @@
 			float: left;
 			margin: 14px 0 0 49px;
 		}
-		header h1 {
+		header h2 {
 			border: solid 0px red;
 			width: 612px;
 			float: left;
-			margin-left: 20px;
-			margin-top: 46px;
-			text-align: center;
+			margin-left: 101px;
+			margin-top: 32px;
 		}
 		#noRecipes {
 			margin-left: 32px;
@@ -241,16 +243,40 @@
 			margin-top: 0;
 			margin-left: 10px;
 		}
+		header ul {
+			float: right;
+			margin: 0;
+			padding: 0;
+			border: solid 0px yellow;
+			margin-right: 35px;
+			margin-top: 10px;
+		}
+		header li {
+			border: solid 0px red;
+			display: inline-block;
+			margin-left: 10px;
+		}
+		header li a:hover {
+			color: rgb(40, 173, 48);
+		}
+		header li .adminPics {
+			margin-right: 5px;
+		}
+		#recipeCollection {
+			border-bottom: solid 2px rgb(71, 196, 84);
+		}
 	</style>
 	<link rel="stylesheet" type="text/css" href="style.css">
 </head>
 <body>
 	<div id="wrapper">
 		<header>
-			<img id="logo" src="logo.png">
-			<h1><%= user.firstName %>'s Recipe Collection</h1>
-			<img src="hat.png">
-			<img src="logout.png">
+			<ul>
+				<li><a href="#"><img class="adminPics" src="hat.png">My Account</a></li>
+				<li><a href="/logout"><img class="adminPics" src="logout.png">Logout</a></li>
+			</ul>
+			<a href="/"><img id="logo" src="logo.png"></a>
+			<h2><span id="recipeCollection"><%= user.firstName %>'s Recipe Collection</span></h2>
 		</header>
 		<div id="topBar">
 			<div id="sortMenu">
