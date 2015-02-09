@@ -17,6 +17,7 @@ var port = process.env.PORT || 3000;
 if (!process.env.PORT) {
 	mongoose.connect('mongodb://localhost/auth');
 } else {
+	console.log("APP RUNNING IN HEROKU!!!");
 	var mongodbURI = "mongodb://heroku_app33846167:olsihqecng2qs1r0ut66tmob28@ds041831.mongolab.com:41831/heroku_app33846167";
 	var mongooseUri = uriUtil.formatMongoose(mongodbUri);
 	mongoose.connect(mongooseUri, options);
