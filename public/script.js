@@ -1,14 +1,14 @@
 $(document).ready(function() {
 	$.ajaxSetup({ cache: false }); //IMPORTANT: Needed for IE!
 
-	// Pre-load images
-	$.fn.preload = function() {
-	    this.each(function(){
-	        $('<img/>')[0].src = this;
-	    });
-	}
+	// // Pre-load images
+	// $.fn.preload = function() {
+	//     this.each(function(){
+	//         $('<img/>')[0].src = this;
+	//     });
+	// }
 
-	$(['plus.png','edit.png','x.png', 'tagicon.png']).preload();
+	// $(['plus.png','edit.png','x.png', 'tagicon.png']).preload();
 
 	// Post Recipe
 	$(document).on('click', '#submitRecipe', function(e) {
