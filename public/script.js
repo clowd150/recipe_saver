@@ -2,13 +2,10 @@ $(document).ready(function() {
 	$.ajaxSetup({ cache: false }); //IMPORTANT: Needed for IE!
 
 	// // Pre-load images
-	// $.fn.preload = function() {
-	//     this.each(function(){
-	//         $('<img/>')[0].src = this;
-	//     });
-	// }
-
-	// $(['plus.png','edit.png','x.png', 'tagicon.png']).preload();
+	$('<img src="plus.png">');
+	$('<img src="edit.png">');
+	$('<img src="x.png">');
+	$('<img src="tagicon.png">');
 
 	// Post Recipe
 	$(document).on('click', '#submitRecipe', function(e) {
