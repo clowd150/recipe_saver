@@ -5,13 +5,14 @@ var bcrypt = require('bcryptjs');
 var mongoose = require('mongoose');
 var sessions = require('client-sessions');
 var uriUtil = require('mongodb-uri');
-
 var url = require('url');
 
 var Schema = mongoose.Schema; //allows use to define our schema
 var ObjectId = Schema.ObjectId;
 
 var port = process.env.PORT || 3000;
+
+// Database Options
 var options = { server: { socketOptions: { keepAlive: 1, connectTimeoutMS: 30000 } }, 
 	replset: { socketOptions: { keepAlive: 1, connectTimeoutMS : 30000 } } };
 
@@ -85,6 +86,24 @@ function requireLogin(req, res, next) {
 		next();
 	}
 }
+
+// Render Password Reset Page
+app.get('/passwordreset', function(req, res) {
+	res.render('passwordreset.ejs');
+});
+
+// Handle a new password
+app.post('/passwordreset', function(req, res) {
+	var hash = bcrypt.hashSync(req.body.password, bcrypt.genSaltSync(10));
+	User.findOne({ email: req.body.email }, function(err, user) {
+		console.log(user);
+		user.password = hash;
+		user.save(function() {});
+	});
+	console.log(req.body.email);
+	console.log(req.body.password);
+});
+
 
 app.get('/', function(req, res) {
 	res.render('index.ejs');
