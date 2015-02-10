@@ -2,7 +2,7 @@ $(document).ready(function() {
 	$.ajaxSetup({ cache: false }); //IMPORTANT: Needed for IE!
 
 	// Pre-load images
-	$.preload = function() {
+	$.fn.preload = function() {
 	    this.each(function(){
 	        $('<img/>')[0].src = this;
 	    });
