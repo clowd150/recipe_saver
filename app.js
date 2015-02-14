@@ -7,11 +7,16 @@ var sessions = require('client-sessions');
 var uriUtil = require('mongodb-uri');
 var url = require('url');
 var nodemailer = require('nodemailer');
+var crypto = require('crypto');
+var async = require('async');
+var fs = require('fs');
 
 var Schema = mongoose.Schema; //allows use to define our schema
 var ObjectId = Schema.ObjectId;
 
 var port = process.env.PORT || 3000;
+
+var goDaddyPass = (process.env.PORT) ? process.env.GODADDY : fs.readFileSync('./public/godaddyemail.txt').toString();
 
 // Database Options
 var options = { server: { socketOptions: { keepAlive: 1, connectTimeoutMS: 30000 } }, 
@@ -34,7 +39,9 @@ var User = mongoose.model('User', new Schema({
 	lastName: String,
 	email: { type: String, unique: true },
 	password: String,
-	sortStyle: String
+	sortStyle: String,
+	resetPasswordToken: String,
+    resetPasswordExpires: String
 }));
 
 var Recipe = mongoose.model('Recipe', new Schema({
@@ -88,6 +95,131 @@ function requireLogin(req, res, next) {
 	}
 }
 
+// Render Account Recovery Page
+app.get('/accountrecovery', function(req, res) {
+	var message = {error: 'none'};
+	res.render('accountrecovery.ejs', message);
+});
+
+// Send Account Recovery Email
+app.post('/accountrecovery', function(req, res, next) {
+  var email;
+  async.waterfall([
+    function(done) {
+      crypto.randomBytes(20, function(err, buf) {
+        var token = buf.toString('hex');
+        done(err, token);
+      });
+    },
+    function(token, done) {
+      User.findOne({ email: req.body.email }, function(err, user) {
+        if (!user) {
+          var message = {error: 'No account with that email address exists.'};
+          res.render('accountrecovery.ejs', message);
+          return;
+        }
+
+        user.resetPasswordToken = token;
+        user.resetPasswordExpires = Date.now() + 3600000; // 1 hour
+
+        user.save(function(err) {
+          done(err, token, user);
+        });
+      });
+    },
+    function(token, user, done) {
+		var transporter = nodemailer.createTransport({
+			host: 'smtpout.secureserver.net', 
+			port: 465, 
+			auth: { 
+				user: 'info@recipesaver.net',
+				pass: goDaddyPass
+			},
+			secure: true
+		});
+		email = user.email;
+	    var mailOptions = {
+	        to: user.email,
+	        from: 'info@recipesaver.net',
+	        subject: 'Recipe Saver Password Reset',
+	        text: 'You are receiving this because you (or someone else) have requested the reset of the password for your account.\n\n' +
+	          'Please click on the following link, or paste this into your browser to reset your password:\n\n' +
+	          'http://' + req.headers.host + '/reset/' + token + '\n\n' +
+	          'If you did not request this, please ignore this email and your password will remain unchanged.\n'
+	    };
+      transporter.sendMail(mailOptions, function(err) {
+      	transporter.close();
+        done(err, 'done');
+      });
+    }
+  ], function(err) {
+    if (err) return next(err);
+    var message = {error: 'An e-mail has been sent to ' + email + ' with further instructions.'};
+    res.render('accountrecovery.ejs', message);
+  });
+});
+
+app.get('/reset/:token', function(req, res) {
+  User.findOne({ resetPasswordToken: req.params.token, resetPasswordExpires: { $gt: Date.now() } }, function(err, user) {
+    if (!user) {
+      console.log('error', 'Password reset token is invalid or has expired.');
+      return res.redirect('/'); //Add message here
+    }
+    console.log("Rendering reset view...")
+    res.render('reset.ejs', {user: req.user});
+  });
+});
+
+app.post('/reset/:token', function(req, res) {
+  async.waterfall([
+    function(done) {
+    	console.log(req.params.token);
+    	console.log();
+      User.findOne({ resetPasswordToken: req.params.token, resetPasswordExpires: { $gt: Date.now() } }, function(err, user) {
+        if (!user) {
+          req.flash('error', 'Password reset token is invalid or has expired.');
+          return res.redirect('back');
+        }
+        var hash = bcrypt.hashSync(req.body.password, bcrypt.genSaltSync(10));
+        user.password = hash;
+        user.resetPasswordToken = undefined;
+        user.resetPasswordExpires = undefined;
+
+        user.save(function(err) {
+          //req.logIn(user, function(err) {
+            done(err, user);
+          //});
+        });
+      });
+    },
+    function(user, done) {
+		var transporter = nodemailer.createTransport({
+			host: 'smtpout.secureserver.net', 
+			port: 465, 
+			auth: { 
+				user: 'info@recipesaver.net',
+				pass: goDaddyPass
+			},
+			secure: true
+		});
+      var mailOptions = {
+        to: user.email,
+        from: 'info@recipesaver.net',
+        subject: 'Your Recipe Saver password has been changed',
+        text: 'Hello,\n\n' +
+          'This is a confirmation that the password for your account ' + user.email + ' has just been changed.\n'
+      };
+      transporter.sendMail(mailOptions, function(err) {
+        console.log('success', '!!!Success! Your password has been changed.');
+        transporter.close();
+        done(err);
+      });
+    }
+  ], function(err) {
+    res.redirect('/login/recovered');
+  });
+});
+
 // Render Password Reset Page
 app.get('/passwordreset', function(req, res) {
 	res.render('passwordreset.ejs');
@@ -132,25 +264,32 @@ app.post('/register', function(req, res) {
 
 			res.render('register.ejs', { error: error });
 		} else {
+			sendWelcomeEmail(req.body.email, req.body.firstName);
 			res.redirect('/profile');
 		}
 	});
 });
 
 app.get('/login', function(req, res) {
-	res.render('login.ejs'/*, { csrfToken: req.csrfToken() } */);
+	var message = {reset: 'none', error: undefined};
+	res.render('login.ejs', message/*, { csrfToken: req.csrfToken() } */);
+});
+
+app.get('/login/recovered', function(req, res) {
+	var message = {reset: "Success! Your password has been changed. Please login to continue.", error: 'none'};
+	res.render('login.ejs', message);
 });
 
 app.post('/login', function(req, res) {
 	User.findOne({ email: req.body.email }, function(err, user) {
 		if (!user) {
-			res.render('login.ejs', { error: 'Invalid email or password.'});
+			res.render('login.ejs', { reset: 'none', error: 'Invalid email or password.'});
 		} else {
 			if (bcrypt.compareSync(req.body.password, user.password)) {
 				req.session.user = user; //set-cookie: session={email: ..., password: ..., ..}
 				res.redirect('/profile');
 			} else {
-				res.render('login.ejs', { error: 'Invalid email or password.'});				
+				res.render('login.ejs', { reset: 'none', error: 'Invalid email or password.'});				
 			}
 		}
 	});
@@ -376,4 +515,69 @@ function formatUrlUpdate(req) {
 		formattedUrl = href;
 	}
 	return formattedUrl;
+}
+
+function sendWelcomeEmail(userEmail, userName) {
+		// create reusable transporter object using SMTP transport
+	var transporter = nodemailer.createTransport({
+		host: 'smtpout.secureserver.net', 
+		port: 465, 
+		auth: { 
+			user: 'info@recipesaver.net',
+			pass: goDaddyPass
+		},
+		secure: true
+	});
+
+	// setup e-mail data with unicode symbols
+	var mailOptions = {
+	    from: 'Recipe Saver <info@recipesaver.net>', // sender address
+	    to: userEmail, // list of receivers
+	    subject: "Recipe Saver - You're In! ✔", // Subject line
+	    text: userName + ", welcome to Recipe Saver! We couldn't be more excited to have you. What can you expect from using our service? We're happy you asked.", // plaintext body
+	    html: "<b>" + userName + ", welcome to Recipe Saver!! We couldn't be more excited to have you. What can you expect from using our service? We're happy you asked.</b>" // html body
+	};
+
+	// send mail with defined transport object
+	transporter.sendMail(mailOptions, function(error, info){
+	    if(error){
+	        console.log(error);
+	    } else {
+	        console.log('Message sent: ' + info.response);
+	    }
+	    transporter.close();
+	});
+}
+
+
+function accountRecoveryEmail(userEmail) {
+		// create reusable transporter object using SMTP transport
+	var transporter = nodemailer.createTransport({
+		host: 'smtpout.secureserver.net', 
+		port: 465, 
+		auth: { 
+			user: 'info@recipesaver.net',
+			pass: goDaddyPass
+		},
+		secure: true
+	});
+
+	// setup e-mail data with unicode symbols
+	var mailOptions = {
+	    from: 'Recipe Saver <info@recipesaver.net>', // sender address
+	    to: userEmail, // list of receivers
+	    subject: "Recipe Saver Account Recovery", // Subject line
+	    text: "You forgot your password, dummy.", // plaintext body
+	    html: "You forgot your password, dummy.</b>" // html body
+	};
+
+	// send mail with defined transport object
+	transporter.sendMail(mailOptions, function(error, info){
+	    if(error){
+	        console.log(error);
+	    } else {
+	        console.log('Message sent: ' + info.response);
+	    }
+	    transporter.close();
+	});
 }

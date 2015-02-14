@@ -1,0 +1,17 @@
+<html>
+<head>
+
+</head>
+<body>
+	<h1>Account Recovery</h1>
+	<form method="POST">
+		<span>Email:</span>	
+		<input type="email" name="email" required>
+		<br>
+		<input type="submit" value="Send Recovery Email">
+	</form>
+	<% if (error != 'none') { %>
+		<%= error %>
+	<% } %>
+</body>
+</html>
