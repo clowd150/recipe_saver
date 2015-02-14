@@ -10,6 +10,7 @@ var nodemailer = require('nodemailer');
 var crypto = require('crypto');
 var async = require('async');
 var fs = require('fs');
+var https = require('https');
 
 var Schema = mongoose.Schema; //allows use to define our schema
 var ObjectId = Schema.ObjectId;
@@ -17,6 +18,7 @@ var ObjectId = Schema.ObjectId;
 var port = process.env.PORT || 3000;
 
 var goDaddyPass = (process.env.PORT) ? process.env.GODADDY : fs.readFileSync('./public/godaddyemail.txt').toString();
+var recaptchaSK = (process.env.PORT) ? process.env.RECAPTCHA : fs.readFileSync('./public/recaptchaSK.txt').toString();
 
 // Database Options
 var options = { server: { socketOptions: { keepAlive: 1, connectTimeoutMS: 30000 } }, 
@@ -103,60 +105,68 @@ app.get('/accountrecovery', function(req, res) {
 
 // Send Account Recovery Email
 app.post('/accountrecovery', function(req, res, next) {
-  var email;
-  async.waterfall([
-    function(done) {
-      crypto.randomBytes(20, function(err, buf) {
-        var token = buf.toString('hex');
-        done(err, token);
-      });
-    },
-    function(token, done) {
-      User.findOne({ email: req.body.email }, function(err, user) {
-        if (!user) {
-          var message = {error: 'No account with that email address exists.'};
-          res.render('accountrecovery.ejs', message);
-          return;
+	verifyRecaptcha(req.body["g-recaptcha-response"], function(success) {
+        if (success) {
+            var email;
+			  async.waterfall([
+			    function(done) {
+			      crypto.randomBytes(20, function(err, buf) {
+			        var token = buf.toString('hex');
+			        done(err, token);
+			      });
+			    },
+			    function(token, done) {
+			      User.findOne({ email: req.body.email }, function(err, user) {
+			        if (!user) {
+			          var message = {error: 'No account with that email address exists.'};
+			          res.render('accountrecovery.ejs', message);
+			          return;
+			        }
+
+			        user.resetPasswordToken = token;
+			        user.resetPasswordExpires = Date.now() + 3600000; // 1 hour
+
+			        user.save(function(err) {
+			          done(err, token, user);
+			        });
+			      });
+			    },
+			    function(token, user, done) {
+					var transporter = nodemailer.createTransport({
+						host: 'smtpout.secureserver.net', 
+						port: 465, 
+						auth: { 
+							user: 'info@recipesaver.net',
+							pass: goDaddyPass
+						},
+						secure: true
+					});
+					email = user.email;
+				    var mailOptions = {
+				        to: user.email,
+				        from: 'info@recipesaver.net',
+				        subject: 'Recipe Saver Password Reset',
+				        text: 'You are receiving this because you (or someone else) have requested the reset of the password for your account.\n\n' +
+				          'Please click on the following link, or paste this into your browser to reset your password:\n\n' +
+				          'http://' + req.headers.host + '/reset/' + token + '\n\n' +
+				          'If you did not request this, please ignore this email and your password will remain unchanged.\n'
+				    };
+			      transporter.sendMail(mailOptions, function(err) {
+			      	transporter.close();
+			        done(err, 'done');
+			      });
+			    }
+			  ], function(err) {
+			    if (err) return next(err);
+			    var message = {error: 'An e-mail has been sent to ' + email + ' with further instructions.'};
+			    res.render('accountrecovery.ejs', message);
+			  });
+        } else {
+            res.end("Captcha failed, sorry.");
+                // TODO: take them back to the previous page
+                // and for the love of everyone, restore their inputs
         }
-
-        user.resetPasswordToken = token;
-        user.resetPasswordExpires = Date.now() + 3600000; // 1 hour
-
-        user.save(function(err) {
-          done(err, token, user);
-        });
-      });
-    },
-    function(token, user, done) {
-		var transporter = nodemailer.createTransport({
-			host: 'smtpout.secureserver.net', 
-			port: 465, 
-			auth: { 
-				user: 'info@recipesaver.net',
-				pass: goDaddyPass
-			},
-			secure: true
-		});
-		email = user.email;
-	    var mailOptions = {
-	        to: user.email,
-	        from: 'info@recipesaver.net',
-	        subject: 'Recipe Saver Password Reset',
-	        text: 'You are receiving this because you (or someone else) have requested the reset of the password for your account.\n\n' +
-	          'Please click on the following link, or paste this into your browser to reset your password:\n\n' +
-	          'http://' + req.headers.host + '/reset/' + token + '\n\n' +
-	          'If you did not request this, please ignore this email and your password will remain unchanged.\n'
-	    };
-      transporter.sendMail(mailOptions, function(err) {
-      	transporter.close();
-        done(err, 'done');
-      });
-    }
-  ], function(err) {
-    if (err) return next(err);
-    var message = {error: 'An e-mail has been sent to ' + email + ' with further instructions.'};
-    res.render('accountrecovery.ejs', message);
-  });
+	});
 });
 
 app.get('/reset/:token', function(req, res) {
@@ -218,23 +228,6 @@ app.post('/reset/:token', function(req, res) {
   ], function(err) {
     res.redirect('/login/recovered');
   });
-});
-
-// Render Password Reset Page
-app.get('/passwordreset', function(req, res) {
-	res.render('passwordreset.ejs');
-});
-
-// Handle a new password
-app.post('/passwordreset', function(req, res) {
-	var hash = bcrypt.hashSync(req.body.password, bcrypt.genSaltSync(10));
-	User.findOne({ email: req.body.email }, function(err, user) {
-		console.log(user);
-		user.password = hash;
-		user.save(function() {});
-	});
-	console.log(req.body.email);
-	console.log(req.body.password);
 });
 
 
@@ -580,4 +573,23 @@ function accountRecoveryEmail(userEmail) {
 	    }
 	    transporter.close();
 	});
+}
+
+
+function verifyRecaptcha(key, callback) {
+	https.get("https://www.google.com/recaptcha/api/siteverify?secret=" + recaptchaSK + "&response=" + key, function(res) {
+        var data = "";
+        res.on('data', function (chunk) {
+            data += chunk.toString();
+        });
+        res.on('end', function() {
+            try {
+                var parsedData = JSON.parse(data);
+                console.log(parsedData);
+                callback(parsedData.success);
+            } catch (e) {
+                callback(false);
+            }
+        });
+    });
 }
