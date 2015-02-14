@@ -6,6 +6,7 @@ var mongoose = require('mongoose');
 var sessions = require('client-sessions');
 var uriUtil = require('mongodb-uri');
 var url = require('url');
+var nodemailer = require('nodemailer');
 
 var Schema = mongoose.Schema; //allows use to define our schema
 var ObjectId = Schema.ObjectId;
