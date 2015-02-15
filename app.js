@@ -162,20 +162,20 @@ app.post('/accountrecovery', function(req, res, next) {
 			    res.render('accountrecovery.ejs', message);
 			  });
         } else {
-            res.end("Captcha failed, sorry.");
-                // TODO: take them back to the previous page
-                // and for the love of everyone, restore their inputs
+			var message = {error: 'Incorrect captcha. Please prove your humanity!'};
+			res.render('accountrecovery.ejs', message);
         }
 	});
 });
 
+
 app.get('/reset/:token', function(req, res) {
   User.findOne({ resetPasswordToken: req.params.token, resetPasswordExpires: { $gt: Date.now() } }, function(err, user) {
     if (!user) {
-      console.log('error', 'Password reset token is invalid or has expired.');
-      return res.redirect('/'); //Add message here
+      console.log('Password reset token is invalid or has expired.!!');
+      return res.redirect('/oops');
     }
-    console.log("Rendering reset view...")
+    console.log("Rendering reset view...");
     res.render('reset.ejs', {user: req.user});
   });
 });
@@ -187,8 +187,8 @@ app.post('/reset/:token', function(req, res) {
     	console.log();
       User.findOne({ resetPasswordToken: req.params.token, resetPasswordExpires: { $gt: Date.now() } }, function(err, user) {
         if (!user) {
-          req.flash('error', 'Password reset token is invalid or has expired.');
-          return res.redirect('back');
+        	console.log('error!', 'Password reset token is invalid or has expired.');
+          	return res.redirect('/oops');
         }
         var hash = bcrypt.hashSync(req.body.password, bcrypt.genSaltSync(10));
         user.password = hash;
@@ -196,9 +196,7 @@ app.post('/reset/:token', function(req, res) {
         user.resetPasswordExpires = undefined;
 
         user.save(function(err) {
-          //req.logIn(user, function(err) {
             done(err, user);
-          //});
         });
       });
     },
@@ -226,8 +224,14 @@ app.post('/reset/:token', function(req, res) {
       });
     }
   ], function(err) {
-    res.redirect('/login/recovered');
+    //res.redirect('/login/recovered');
+    var message = {reset: "Success! Your password has been changed. Please login to continue.", error: 'none'};
+    res.render('login.ejs', message);
   });
+});
+
+app.get('/oops', function(req, res) {
+	res.render('oops.ejs');
 });
 
 
@@ -266,11 +270,6 @@ app.post('/register', function(req, res) {
 app.get('/login', function(req, res) {
 	var message = {reset: 'none', error: undefined};
 	res.render('login.ejs', message/*, { csrfToken: req.csrfToken() } */);
-});
-
-app.get('/login/recovered', function(req, res) {
-	var message = {reset: "Success! Your password has been changed. Please login to continue.", error: 'none'};
-	res.render('login.ejs', message);
 });
 
 app.post('/login', function(req, res) {

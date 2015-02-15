@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html>
 <head>
 <script src='https://www.google.com/recaptcha/api.js'></script>
@@ -8,8 +9,8 @@
 		<span>Email:</span>	
 		<input type="email" name="email" required>
 		<br>
-		<input type="submit" value="Send Recovery Email">
 		<div class="g-recaptcha" data-sitekey="6LceDQITAAAAAHAgwfYPQGlr0bdk9xiEFJFK2-t2"></div>
+		<input type="submit" value="Send Recovery Email">
 	</form>
 	<% if (error != 'none') { %>
 		<%= error %>

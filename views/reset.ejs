@@ -1,16 +1,30 @@
+<!DOCTYPE html>
 <html>
 <head>
-
+	<script src="/scripts/jquery-1.11.2.min.js"></script>
 </head>
 <body>
+	<img src="/images/logo2.png"> <!-- must be in images folder -->
 	<h1>Reset Your Password</h1>
 	<form method="POST">
 		<span>New Password:</span>
-		<input type="password" name="password" required><br>
+		<input type="password" name="password" id="password" required><br>
 		<span>Confirm Password:</span>
-		<input type="password" name="passwordConfirm" required>
+		<input type="password" name="passwordConfirm" id="passwordConfirm" required>
 		<br>
-		<input type="submit" value="Update Password">
+		<input type="submit" id="submit" value="Update Password">
 	</form>
+	<script>
+		$(document).on('click', '#submit', function(e) {
+			var password = $('#password').val();
+			var passwordConfirm = $('#passwordConfirm').val();
+			if (password !== passwordConfirm) {
+				e.preventDefault();
+				alert("Password and password confirmation must match.");
+			} /*else if (password.length < 6) {
+				alert("Password must be longer than 6 characters.");
+			}*/
+		});
+	</script>
 </body>
 </html>
