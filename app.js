@@ -66,8 +66,8 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(sessions({
 	cookieName: 'session',
 	secret: "*-dafdpas23rsda232222;;al;",
-	duration: 30 * 60 * 1000,
-	activeDuration: 5 * 60 * 1000
+	duration: 60 * 60 * 1000, //Initial session is good for 1 hour
+	activeDuration: 30 * 60 * 1000 //Lengthen session by 30 mins
 }));
 
 //app.use(csrf());
@@ -239,30 +239,51 @@ app.get('/', function(req, res) {
 	res.render('index.ejs');
 });
 
+// REGISTRATION PAGE
 app.get('/register', function(req, res) {
-	res.render('register.ejs'/*, { csrfToken: req.csrfToken() } */);
+	res.render('register.ejs', {regMessage: 'none'}/*, { csrfToken: req.csrfToken() } */);
 });
 
+// REGISTER USER
 app.post('/register', function(req, res) {
-	var hash = bcrypt.hashSync(req.body.password, bcrypt.genSaltSync(10));
-	var user = new User({
-		firstName: req.body.firstName,
-		lastName: req.body.lastName,
-		email: req.body.email,
-		password: hash,
-		sortStyle: "default"
-	});
-	user.save(function(err) {
-		if (err) {
-			var err = 'Something bad happened! Try again!';
-			if (err.code === 11000) { //this is the error mongoDB returns if something's nonunique
-				err = 'That email is already taken, try another.';
-			}
+	verifyRecaptcha(req.body["g-recaptcha-response"], function(success) {
+        if (success) {
+			var hash = bcrypt.hashSync(req.body.password, bcrypt.genSaltSync(10));
+			var user = new User({
+				firstName: req.body.firstName,
+				lastName: req.body.lastName,
+				email: req.body.email,
+				password: hash,
+				sortStyle: "default"
+			});
+			user.save(function(err) {
+				if (err) {
+					var errMessage = 'Something bad happened! Try again!';
+					if (err.code === 11000) { //this is the error mongoDB returns if something's nonunique
+						errMessage = 'That email is already taken, please try another one.';
+					}
+					res.render('register.ejs', { regMessage: errMessage });
+				} else {
+					sendWelcomeEmail(req.body.email, req.body.firstName);
 
-			res.render('register.ejs', { error: error });
+						//Immediately log user in and send to their profile page
+						User.findOne({ email: req.body.email }, function(err, user) {
+						if (!user) {
+							res.render('login.ejs', { reset: 'none', error: 'Invalid email or password.'});
+						} else {
+							if (bcrypt.compareSync(req.body.password, user.password)) {
+								req.session.user = user; //set-cookie: session={email: ..., password: ..., ..}
+								res.redirect('/profile');
+							} else {
+								res.render('login.ejs', { reset: 'none', error: 'Invalid email or password.'});				
+							}
+						}
+					});
+				}
+
+			});
 		} else {
-			sendWelcomeEmail(req.body.email, req.body.firstName);
-			res.redirect('/profile');
+			res.render('register.ejs', {regMessage: 'Incorrect captcha. Please prove your humanity!'});
 		}
 	});
 });
