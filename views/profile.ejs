@@ -225,6 +225,9 @@
 		#noRecipes {
 			margin-left: 32px;
 		}
+		#noRecipes h2 {
+			font-size: 16px;
+		}
 		#sideEntryTop {
 			border: solid 0px red;
 			height: 29px;
@@ -261,7 +264,7 @@
 		header li .adminPics {
 			margin-right: 5px;
 		}
-		#recipeCollection {
+		.greenUnderline {
 			border-bottom: solid 2px rgb(71, 196, 84);
 		}
 	</style>
@@ -274,8 +277,8 @@
 				<li><a href="#"><img class="adminPics" src="hat.png">My Account</a></li>
 				<li><a href="/logout"><img class="adminPics" src="logout.png">Logout</a></li>
 			</ul>
-			<a href="/"><img id="logo" src="logo.png"></a>
-			<h2><span id="recipeCollection"><%= user.firstName %>'s Recipe Collection</span></h2>
+			<a href="/"><img id="logo" src="logo3.png"></a>
+			<h2><span class="greenUnderline"><%= user.name %>'s Recipe Collection</span></h2>
 		</header>
 		<div id="topBar">
 			<div id="sortMenu">
@@ -294,8 +297,8 @@
 		<div style="clear"></div><!--clearing div -->
 		<div id="sideEntry">
 			<div id="sideEntryTop">
-				<img src="console.png">
-				<h2>Log a Recipe</h2>
+				<img src="log.png">
+				<h2><span class="greenUnderline">Log a Recipe</span></h2>
 			</div>
 			<form id="recipeEntry">
 				<input type="text" name="recipe" placeholder="Recipe Name" required><br>

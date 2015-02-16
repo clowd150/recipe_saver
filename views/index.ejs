@@ -1,9 +1,327 @@
 <html>
 <head>
+	<style>
+		body {
+			margin: 0;
+			background: url('whitewall.png') repeat;
 
+
+		}
+		@font-face {
+			font-family: 'Raleway'; 
+			src: url('Raleway-Regular.ttf'); 
+			font-style: normal;
+			font-weight: normal;
+		}
+		h1, h2 {
+			font-family: "Raleway";
+			margin: 0;
+		}
+		#headSection {
+			background: url("bgtest.jpg") no-repeat center center; 
+			-webkit-background-size: cover;
+			-moz-background-size: cover;
+			-o-background-size: cover;
+			background-size: cover;
+			height: 610px;
+		}
+		#mainHead {
+			margin: 0 auto;
+			width: 900px;
+		}
+		#coverLeft {
+			width: 600px;
+			height: 610px;
+			background-color: rgba(27, 24, 24, 0.88);
+			float: left;
+			text-align: center;
+		}
+		#coverLeftText {
+			color: white;
+			font-family: "Raleway";
+			margin-top: 25px;
+		}
+		#canvas {
+			margin-top: 15px;
+		}
+		#coverLeftText h1 {
+			font-size: 48px;
+			font-weight: 100;
+		}
+		#coverLeftText h2 {
+			font-size: 26px;
+			font-weight: 100;
+			margin-top: 10px;
+		}
+		#summary {
+			border: solid 0px black;
+			width: 525px;
+			margin: 0 auto;
+			margin-top: 25px;
+			text-align: left;
+			color: rgb(186, 186, 186);
+			font-size: 16px;
+			line-height: 24px;
+		}
+		.under {
+			border-bottom: solid 2px #54d654;
+		}
+		.smallUnderline {
+			border-bottom: solid 1px #54d654;
+		}
+		#bottomText {
+			margin-top: 57px;
+			color: white;
+			font-size: 18px;
+			text-align: center;
+		}
+		#coverRight {
+			width: 300px;
+			height: 610px;
+			background-color: rgba(3, 3, 3, 0.9);
+			float: left;
+			color: white;
+		}
+		#rightTop h4 {
+			font-family: "Raleway";
+			font-weight: 100;
+			color: rgb(186, 186, 186);
+			padding-left: 15px;
+			font-size: 15px;
+			border: solid 0px yellow;
+			width: 175px;
+			float: left;
+			margin-top: 5px;
+			margin-bottom: 35px;
+		}
+		#social {
+			border: solid 0px red;
+			width: 70px;
+			float: left;
+			margin-top: 0px;
+			margin-left: 10px;
+		}
+		#loginButton {
+			text-align: center;
+			margin-top: 20px;
+		}
+		button {
+			width: 140px;
+			height: 34px;
+			background-color: #47C454;
+			border: solid 0px black;
+			color: white;
+			font-size: 15px;
+		}
+		button:hover {
+			background-color: rgb(18, 134, 18);
+		}
+		#signUp, #LogInTitle {
+			text-align: center;
+			margin-top: 20px;
+			margin-bottom: 15px;
+		}
+		#login {
+			display: none;
+			margin-top: 45px;
+		}
+		#forgotPass {
+			text-align: right;
+			padding-right: 15px;
+			margin-top: 10px;
+		}
+		#forgotPass a {
+			color: white;
+			font-family: "Raleway";
+			font-size: 14px;
+		}
+		#registration form, #login form {
+			padding-left: 15px;
+			margin-bottom: 6px;
+		}
+		#registration form label, #login form label {
+			display: block;
+			margin-top: 8px;
+			margin-bottom: 3px;
+			font-family: "Raleway";
+			font-size: 14px;
+		}
+		#registration input, #login input {
+			height: 34px;
+			width: 269px;
+			border: solid 1px #54d654;
+		}
+		#registration input:hover, #login input:hover {
+			border: solid 1px blue;
+		}
+		#registration input[type=submit], #login input[type=submit] {
+			border: solid 1px black;
+			background-color: #47C454;
+			color: white;
+			font-size: 15px;
+			font-weight: 500;
+		}
+		#login input[type=submit] {
+			margin-top: 15px;
+		}
+		#registration input[type=submit]:hover, #login input[type=submit]:hover {
+			background-color: rgb(18, 134, 18);
+		}
+		.g-recaptcha {
+			margin: 0 auto;
+			margin-top: 15px;
+			margin-bottom: 5px;
+		}
+		#message {
+			font-family: "Raleway";
+			border: solid 0px blue;
+			padding-left: 15px;
+			padding-right: 10px;
+			font-size: 15px;
+			color: rgb(242, 74, 0);
+			padding-top: 10px;
+			height: 50px;
+		}
+		#wrapper {
+			width: 868px;
+			margin: 0 auto;
+			border: solid 1px black;
+			background-color: white;
+			padding: 15px;
+		}
+	</style>
+	<script src='https://www.google.com/recaptcha/api.js'></script>
+	<script src="/scripts/jquery-1.11.2.min.js"></script>
+	<script src="/scripts/shiny-min.js"></script>
+	<script src="/scripts/jquery-ui.min.js"></script>
 </head>
 <body>
-	<h1>Auth!</h1>
-	Welcome to the auth home page! Please <a href="/login">login</a> or <a href="/register">register</a> to continue.
+	<div id="headSection">
+		<div id="mainHead">
+			<div id="coverLeft">
+				<div id="canvas">
+					<img id="homeLogo" src="homelogo.png">
+				</div>
+				<div id="coverLeftText">
+					<h1><span class="under">Recipe Saver</span></h1>
+					<h2>Save any recipe.</h2>
+					<div id="summary">
+						<p>
+							Recipe Saver is a no-frills, online journal for your favorite online recipes. No more cluttered bookmarks or having to register countless accounts just to save a few recipes that interest you.
+							<br><br>
+							There are tons of great recipes online, but they're all over the place. With Recipe Saver, you can save, consolidate, and organize the ones that interest you. And best of all, it’s completely <span class="smallUnderline">free</span>. Seriously.
+						</p>
+						<p id="bottomText">The easiest way to store recipes online!</p>
+					</div>
+				</div>
+			</div>
+			<div id="coverRight">
+				<div id="rightTop">
+					<h4><span class="smallUnderline">Stay connected with us.</span></h4>
+					<div id="social">
+						<a href="#" target="blank"><img src="facebookicon.png" style="margin-right: 9px;"></a>
+						<a href="#" target="blank"><img src="googleicon.png"></a>
+					</div>
+					<div id="loginButton">
+						<button>Log In</button>
+					</div>
+				</div>
+				<div style="clear: both;"></div>
+				<div id="registration">
+					<h2 id="signUp">Save Your Recipes</h2>
+					<form method="POST">
+						<label>Name:</label>
+						<input type="text" name="name" required><br>
+						<label>Email:</label>
+						<input type="email" name="email" required><br>
+						<label>Password:</label>
+						<input type="password" name="password" id="password" required><br>
+						<label>Confirm Password:</label>
+						<input type="password" name="passwordConfirm" id="passwordConfirm" required><br>
+						<div class="g-recaptcha" data-sitekey="6LceDQITAAAAAHAgwfYPQGlr0bdk9xiEFJFK2-t2" style="transform:scale(0.89);transform-origin:0 0"></div>
+						<input type="submit" id="submit" value="Register">
+					</form>
+					<% if (regMessage != 'none') { %>
+						<div id="message">
+							<%= regMessage %>
+							<br><br>
+						</div>
+					<% } %>
+				</div>
+				<div id="login">
+					<h2 id="LogInTitle">Welcome Back</h2>
+					<form method="POST" action="/login">
+						<label>Email:</label>
+						<input type="email" name="email" required>
+						<label>Password:</label>
+						<input type="password" name="password" required>
+						<input type="submit" value="Log In">
+					</form>
+					<div id="forgotPass">
+						<a href="/accountrecovery">Forgot Password</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div id="wrapper">
+		<b>Keep Track</b>
+		Discover an enticing new recipe online? Save it to you recipe collection so it's never forgotten.
+
+		<b>Stay Organized</b>
+		Categorize your saved recipes with custom tags so you can easily filter them by any term.
+
+		<b>Enhance Recipes</b>
+		Does a certain dish need more salt? Add helpful notes to your recipe entries so you can refer back to your annotations.
+
+
+		<h1>Auth!</h1>
+		Welcome to the auth home page! Please <a href="/login">login</a> or <a href="/register">register</a> to continue.
+		Lovingly built with NodeJS
+	</div>
+
+	<script>
+		$(document).ready(function() {
+			$(document).on('click', '#submit', function(e) {
+				var password = $('#password').val();
+				var passwordConfirm = $('#passwordConfirm').val();
+				if (password !== passwordConfirm) {
+					e.preventDefault();
+					alert("Password and password confirmation must match.");
+				} /*else if (password.length < 6) {
+					alert("Password must be longer than 6 characters.");
+				}*/
+			});
+
+			$(document).on('click', 'button', function() {
+				if ($(this).text() == "Log In") {
+					$(this).text("Register Here");
+					$('#registration').hide("slide", 100);
+					setTimeout(function() {
+						$('#login').show("slide", 200);
+					}, 100);
+				} else {
+					$(this).text("Log In");
+					$('#login').hide("slide", 100);
+					setTimeout(function() {
+						$('#registration').show("slide", 200);
+					}, 100);
+				}
+			});
+
+			var isSafari = !!navigator.userAgent.match(/Version\/[\d\.]+.*Safari/);
+			if (!isSafari) {
+				$('#homeLogo').shinyImage({
+						opacity: 59,
+						thickness: 93,
+						angle: 130,
+						speed: 42,
+						delay: 4,
+						loop: true,
+						doubleside: false
+				});
+			}
+		});
+	</script>
 </body>
 </html>

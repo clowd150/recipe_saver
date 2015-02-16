@@ -37,8 +37,7 @@ if (!process.env.PORT) {
 //User is a mongoose model (meaning it represents a user in the database). Then specify a schema, which is how the data is going to be represented in the db. List the fields and what type of value they are. The id is the value that MongoDB provides us.
 var User = mongoose.model('User', new Schema({
 	id: ObjectId,
-	firstName: String,
-	lastName: String,
+	name: String,
 	email: { type: String, unique: true },
 	password: String,
 	sortStyle: String,
@@ -236,7 +235,7 @@ app.get('/oops', function(req, res) {
 
 
 app.get('/', function(req, res) {
-	res.render('index.ejs');
+	res.render('index.ejs', {regMessage: 'none'});
 });
 
 // REGISTRATION PAGE
@@ -245,13 +244,12 @@ app.get('/register', function(req, res) {
 });
 
 // REGISTER USER
-app.post('/register', function(req, res) {
+app.post('/', function(req, res) {
 	verifyRecaptcha(req.body["g-recaptcha-response"], function(success) {
         if (success) {
 			var hash = bcrypt.hashSync(req.body.password, bcrypt.genSaltSync(10));
 			var user = new User({
-				firstName: req.body.firstName,
-				lastName: req.body.lastName,
+				name: req.body.name,
 				email: req.body.email,
 				password: hash,
 				sortStyle: "default"
@@ -262,9 +260,9 @@ app.post('/register', function(req, res) {
 					if (err.code === 11000) { //this is the error mongoDB returns if something's nonunique
 						errMessage = 'That email is already taken, please try another one.';
 					}
-					res.render('register.ejs', { regMessage: errMessage });
+					res.render('index.ejs', { regMessage: errMessage });
 				} else {
-					sendWelcomeEmail(req.body.email, req.body.firstName);
+					sendWelcomeEmail(req.body.email, req.body.name);
 
 						//Immediately log user in and send to their profile page
 						User.findOne({ email: req.body.email }, function(err, user) {
@@ -283,7 +281,7 @@ app.post('/register', function(req, res) {
 
 			});
 		} else {
-			res.render('register.ejs', {regMessage: 'Incorrect captcha. Please prove your humanity!'});
+			res.render('index.ejs', {regMessage: 'Incorrect captcha. Please prove your humanity!'});
 		}
 	});
 });
