@@ -4,8 +4,7 @@
 		body {
 			margin: 0;
 			background: url('whitewall.png') repeat;
-
-
+			font-family: "Raleway";
 		}
 		@font-face {
 			font-family: 'Raleway'; 
@@ -189,10 +188,35 @@
 			background-color: white;
 			padding: 15px;
 		}
+		#canvas2 {
+			position: absolute;
+			z-index: 10;
+			margin-top: -148px;
+			margin-left: 226px;
+		}
+		#iconSection {
+			margin-bottom: 30px;
+		}
+		#keepTrack, #stayOrganized, #enhanceRecipes {
+			border: solid 0px red;
+			width: 257px;
+			float: left;
+			font-size: 14px;
+			margin-left: 26px;
+		}
+		#keepTrack img, #stayOrganized img, #enhanceRecipes img {
+			float: left;
+			padding-right: 18px;
+		}
+		#keepTrack h5, #stayOrganized h5, #enhanceRecipes h5 {
+			font-size: 18px;
+		}
+		#information {
+			text-align: center;
+		}
 	</style>
 	<script src='https://www.google.com/recaptcha/api.js'></script>
 	<script src="/scripts/jquery-1.11.2.min.js"></script>
-	<script src="/scripts/shiny-min.js"></script>
 	<script src="/scripts/jquery-ui.min.js"></script>
 </head>
 <body>
@@ -200,7 +224,10 @@
 		<div id="mainHead">
 			<div id="coverLeft">
 				<div id="canvas">
-					<img id="homeLogo" src="homelogo.png">
+					<img id="homeLogo" src="shine-copy.gif">
+				</div>
+				<div id="canvas2">
+					<img id="circleborder" src="circleborder2.png">
 				</div>
 				<div id="coverLeftText">
 					<h1><span class="under">Recipe Saver</span></h1>
@@ -265,21 +292,30 @@
 		</div>
 	</div>
 	<div id="wrapper">
-		<b>Keep Track</b>
-		Discover an enticing new recipe online? Save it to you recipe collection so it's never forgotten.
-
-		<b>Stay Organized</b>
-		Categorize your saved recipes with custom tags so you can easily filter them by any term.
-
-		<b>Enhance Recipes</b>
-		Does a certain dish need more salt? Add helpful notes to your recipe entries so you can refer back to your annotations.
-
-
-		<h1>Auth!</h1>
-		Welcome to the auth home page! Please <a href="/login">login</a> or <a href="/register">register</a> to continue.
-		Lovingly built with NodeJS
+		<div id="iconSection">
+			<div id="keepTrack">
+				<img src="checkmark.png">
+				<h5>Keep Track</h5>
+				Discover an enticing new recipe online? Save it to you recipe collection so it's never forgotten.
+			</div>
+			<div id="stayOrganized">
+				<img src="tag.png">
+				<h5>Stay Organized</h5>
+				Categorize your saved recipes with custom tags so you can easily filter them by any term.
+			</div>
+			<div id="enhanceRecipes">
+				<img src="clipboard.png">
+				<h5>Improve Recipes</h5>
+				Recipe needs more salt? Add helpful notes to your recipe entries so you can refer back to your annotations.
+			</div>
+			<div style="clear: both"></div>
+		</div>
+		<div id="information">
+			<h2><span class="under">A place in the cloud for your favorite dishes.</span></h2>
+		</div>
+		
 	</div>
-
+Lovingly built with NodeJS
 	<script>
 		$(document).ready(function() {
 			$(document).on('click', '#submit', function(e) {
@@ -308,19 +344,6 @@
 					}, 100);
 				}
 			});
-
-			var isSafari = !!navigator.userAgent.match(/Version\/[\d\.]+.*Safari/);
-			if (!isSafari) {
-				$('#homeLogo').shinyImage({
-						opacity: 59,
-						thickness: 93,
-						angle: 130,
-						speed: 42,
-						delay: 4,
-						loop: true,
-						doubleside: false
-				});
-			}
 		});
 	</script>
 </body>
