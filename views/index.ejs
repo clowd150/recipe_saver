@@ -104,7 +104,7 @@
 			text-align: center;
 			margin-top: 20px;
 		}
-		button {
+		#regSwitch {
 			width: 140px;
 			height: 34px;
 			background-color: #47C454;
@@ -112,7 +112,7 @@
 			color: white;
 			font-size: 15px;
 		}
-		button:hover {
+		#regSwitch:hover {
 			background-color: rgb(18, 134, 18);
 		}
 		#signUp, #LogInTitle {
@@ -150,7 +150,7 @@
 			width: 269px;
 			border: solid 1px #54d654;
 		}
-		#registration input:hover, #login input:hover {
+		#registration input:hover, #login input:hover, #registration input:focus,  #login input:focus{
 			border: solid 1px blue;
 		}
 		#registration input[type=submit], #login input[type=submit] {
@@ -185,8 +185,11 @@
 			width: 868px;
 			margin: 0 auto;
 			border: solid 1px black;
+			border-top: solid 0px black;
+			border-bottom: solid 0px black;
 			background-color: white;
-			padding: 15px;
+			padding: 15px 15px 0 15px;
+			min-height: 1031px;
 		}
 		#canvas2 {
 			position: absolute;
@@ -196,6 +199,14 @@
 		}
 		#iconSection {
 			margin-bottom: 30px;
+			padding-top: 35px;
+			padding-bottom: 35px;
+			background-color: rgb(244, 244, 244);
+			width: 898px;
+			margin: 0 auto;
+			border: solid 1px black;
+			border-bottom: solid 0px black;
+			border-top: solid 0px black;
 		}
 		#keepTrack, #stayOrganized, #enhanceRecipes {
 			border: solid 0px red;
@@ -211,13 +222,130 @@
 		#keepTrack h5, #stayOrganized h5, #enhanceRecipes h5 {
 			font-size: 18px;
 		}
+		#spreadsheet {
+			margin-top: 18px;
+			text-align: center;
+			font-size: 23px;
+		}
 		#information {
 			text-align: center;
+			margin-top: 55px;
+		}
+		.examplePics {
+			float: left;
+		}
+		#chromeWindow {
+			margin-top: 35px;
+			height: 432px;
+			margin-bottom: 30px;
+		}
+		#chromeWindowText {
+			float: left;
+			border: solid 1px rgba(69, 69, 69, 0.23);
+			margin-top: 55px;
+			width: 300px;
+			margin-right: 45px;
+			margin-left: 23px;
+			padding: 20px 10px 20px 10px;
+		}
+		#chromeWindowText h2 {
+			margin-bottom: 35px;
+			font-size: 22px;
+		}
+		#rs {
+			border: solid 0px green;
+			height: 470px;
+		}
+		#rsWindow {
+			border: solid 1px black;
+		}
+		#rsWindowText {
+			border: solid 1px rgba(69, 69, 69, 0.23);
+			width: 300px;
+			float: left;
+			margin-top: 44px;
+			margin-right: 46px;
+			margin-left: 23px;
+			padding: 20px 10px 20px 10px;
+		}
+		#rsWindowText h2 {
+			margin-bottom: 35px;
+			font-size: 22px;
+		}
+		#registerNow {
+			padding-top: 5px;
+			padding-bottom: 35px;
+			background-color: rgb(244, 244, 244);
+			width: 898px;
+			margin: 0 auto;
+			border: solid 1px black;
+			border-bottom: solid 0px black;
+			border-top: solid 0px black;
+		}
+		#registerNow h2 {
+			margin-top: 18px;
+			text-align: center;
+		}
+		#regBottom {
+			border: solid 0px black;
+			background-color: #47C454;
+			color: white;
+			font-size: 17px;
+			font-family: Arial;
+			font-weight: lighter;
+			height: 34px;
+			width: 290px;
+		}
+		#regBottom:hover {
+			background-color: rgb(18, 134, 18);
+		}
+		#callToAction {
+			margin-top: 22px;
+			text-align: center;
+		}
+		#footer {
+			background: url('paddingimage.png');
+			height: 295px;
+			padding: 15px 0px 55px 0px;
+			color: rgb(175, 176, 174);
+			margin: 0 auto;
+			background-color: rgb(35, 35, 35);
+			width: 898px;
+			font-size: 12px;
+			border-left: solid 1px black;
+			border-right: solid 1px black;
+		}
+		#footerCover {
+			height: 20px;
+			background-color: rgba(3, 3, 3, 0.9);
+			padding: 15px 15px 15px 15px;
+			margin-top: 300px;
+		}
+		#footer a {
+			color: rgb(175, 176, 174);
+		}
+		#copyright {
+			float: left;
+			border: solid 0px red;
+			width: 350px;
+		}
+		#node {
+			float: right;
+			border: solid 0px blue;
+			width: 170px;
 		}
 	</style>
 	<script src='https://www.google.com/recaptcha/api.js'></script>
 	<script src="/scripts/jquery-1.11.2.min.js"></script>
 	<script src="/scripts/jquery-ui.min.js"></script>
+	<script>
+		(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+		(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+		m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+		})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+		ga('create', 'UA-59805292-1', 'auto');
+		ga('send', 'pageview');
+	</script>
 </head>
 <body>
 	<div id="headSection">
@@ -250,7 +378,7 @@
 						<a href="#" target="blank"><img src="googleicon.png"></a>
 					</div>
 					<div id="loginButton">
-						<button>Log In</button>
+						<button id="regSwitch">Log In</button>
 					</div>
 				</div>
 				<div style="clear: both;"></div>
@@ -258,7 +386,7 @@
 					<h2 id="signUp">Save Your Recipes</h2>
 					<form method="POST">
 						<label>Name:</label>
-						<input type="text" name="name" required><br>
+						<input type="text" name="name" id="name" required><br>
 						<label>Email:</label>
 						<input type="email" name="email" required><br>
 						<label>Password:</label>
@@ -279,7 +407,7 @@
 					<h2 id="LogInTitle">Welcome Back</h2>
 					<form method="POST" action="/login">
 						<label>Email:</label>
-						<input type="email" name="email" required>
+						<input type="email" name="email" id="email" required>
 						<label>Password:</label>
 						<input type="password" name="password" required>
 						<input type="submit" value="Log In">
@@ -291,33 +419,62 @@
 			</div>
 		</div>
 	</div>
+	<div id="iconSection">
+		<div id="keepTrack">
+			<img src="checkmark.png">
+			<h5>Keep Track</h5>
+			Discover an enticing new recipe online? Save it to you recipe collection so it's never forgotten.
+		</div>
+		<div id="stayOrganized">
+			<img src="tag.png">
+			<h5>Stay Organized</h5>
+			Categorize your saved recipes with custom tags so you can easily filter them by any term.
+		</div>
+		<div id="enhanceRecipes">
+			<img src="clipboard.png">
+			<h5>Improve Recipes</h5>
+			Recipe needs more salt? Add helpful notes to your recipe entries so you can refer back to your annotations.
+		</div>
+		<div style="clear: both"></div>
+	</div>
 	<div id="wrapper">
-		<div id="iconSection">
-			<div id="keepTrack">
-				<img src="checkmark.png">
-				<h5>Keep Track</h5>
-				Discover an enticing new recipe online? Save it to you recipe collection so it's never forgotten.
-			</div>
-			<div id="stayOrganized">
-				<img src="tag.png">
-				<h5>Stay Organized</h5>
-				Categorize your saved recipes with custom tags so you can easily filter them by any term.
-			</div>
-			<div id="enhanceRecipes">
-				<img src="clipboard.png">
-				<h5>Improve Recipes</h5>
-				Recipe needs more salt? Add helpful notes to your recipe entries so you can refer back to your annotations.
+		<h2 id="spreadsheet"><span class="under">Forget spreadsheets or bookmarks. Make your recipes available everywhere.</span></h2>
+		<div id="information">
+			<div id="chromeWindow">
+				<div id="chromeWindowText">
+					<h2><span class="smallUnderline">Recipe Saver keeps your recipes in one spot.</span></h2>
+					<img src="copy.png">
+					<p>Saving a recipe to your Recipe Saver collection is as simple as copying a URL on a website of your choice.</p>
+				</div>
+				<img class="examplePics" src="chromewindow.png">
 			</div>
 			<div style="clear: both"></div>
+			<div id="rs">
+				<div id="rsWindowText">
+					<h2><span class="smallUnderline">Manage your personal recipe collection.</span></h2>
+					<img src="manage.png">
+					<p>Paste the URL and include additonal information in your collection where you can edit, sort, and tag your recipes.</p>
+				</div>
+				<img class="examplePics" src="rswindow.png" id="rsWindow">
+			</div>
 		</div>
-		<div id="information">
-			<h2><span class="under">A place in the cloud for your favorite dishes.</span></h2>
-			<img src="chromewindow.png">
-			<img src="rswindow.png">
-		</div>
-		
 	</div>
-Lovingly built with NodeJS<img src="nodeicon.png">
+	<div id="registerNow">
+		<h2><span class="under">So what are you waiting for? It's free.</span></h2>
+		<div id="callToAction">
+			<button id="regBottom">Create My Recipe Collection</button>
+		</div>
+	</div>
+	<div id="footer">
+		<div id="footerCover">
+			<div id="copyright">
+				&copy; 2015 Copyright RecipeSaver.net &nbsp;|&nbsp; All Rights Reserved
+			</div>
+			<div id="node">
+				Lovingly built with <a href="http://nodejs.org/">NodeJS<img src="nodeicon.png" style="width: 16px; height: 19px; vertical-align: middle; margin-left: 5px"></a>
+			</div>
+		</div>
+	</div>
 	<script>
 		$(document).ready(function() {
 			$(document).on('click', '#submit', function(e) {
@@ -331,12 +488,13 @@ Lovingly built with NodeJS<img src="nodeicon.png">
 				}*/
 			});
 
-			$(document).on('click', 'button', function() {
+			$(document).on('click', '#regSwitch', function() {
 				if ($(this).text() == "Log In") {
 					$(this).text("Register Here");
 					$('#registration').hide("slide", 100);
 					setTimeout(function() {
 						$('#login').show("slide", 200);
+						$('#email').focus();
 					}, 100);
 				} else {
 					$(this).text("Log In");
@@ -345,6 +503,14 @@ Lovingly built with NodeJS<img src="nodeicon.png">
 						$('#registration').show("slide", 200);
 					}, 100);
 				}
+			});
+
+			$(document).on('click', '#regBottom', function() {
+				$('html, body').animate({
+	        		scrollTop: 0
+	    		}, 400);
+	    		$('#name').focus();
+	   			return false;
 			});
 		});
 	</script>
