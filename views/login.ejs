@@ -1,25 +1,144 @@
 <html>
 <head>
-
+	<style>
+		body {
+			background: url("gourmetoptimized.jpg") no-repeat center center fixed; 
+			-webkit-background-size: cover;
+			-moz-background-size: cover;
+			-o-background-size: cover;
+			background-size: cover;
+			font-family: "Raleway";
+		}
+		#loginBox {
+			width: 800px;
+			height: 270px;
+			margin: 0 auto;
+			background-color: rgba(27, 24, 24, 0.83);
+			position:absolute;
+		    top:50%;
+		    left:50%;
+		    margin-left:-400px; /* width / -2 */
+		    margin-top:-135px; /* height / -2 */
+		}
+		#login form {
+			padding-left: 15px;
+			margin-bottom: 6px;
+		}
+		#login {
+			height: 114px;
+			width: 607px;
+			margin: 0 auto;
+		}
+		#login label {
+			display: block;
+			margin-top: 8px;
+			margin-bottom: 3px;
+			font-family: "Raleway";
+			font-size: 14px;
+			color: white;
+		}
+		#login input {
+			height: 34px;
+			width: 225px;
+			border: solid 1px #54d654;
+			border-radius: 3px;
+		}
+		#login input:hover, #login input:focus{
+			border: solid 1px blue;
+		}
+		#login input[type=submit] {
+			background-color: #47C454;
+			color: white;
+			font-size: 15px;
+			font-weight: 500;
+			border: 0;
+			width: 100px;
+			margin-top: 27px;
+		}
+		#login input[type=submit]:hover {
+			background-color: rgb(18, 134, 18);
+		}
+		#email, #password {
+			font-size: 17px;
+		}
+		#forgotLink {
+			border: solid 0px red;
+			width: 120px;
+			float: right;
+			margin-right: 83px;
+		}
+		#forgotLink a {
+			font-size: 12px;
+			color: rgb(216, 214, 214);
+		}
+		#forgotLink a:hover {
+			text-decoration: none;
+		}
+		#emailSection {
+			border: solid 0px red;
+			width: 250px;
+			float: left;
+		}
+		#passwordSection {
+			border: solid 0px blue;
+			width: 250px;
+			float: left;
+		}
+		#submitSection {
+			border: solid 0px blue;
+			width: 100px;
+			float: left;
+		}
+		#innerBox {
+			border: solid 0px yellow;
+			height: 175px;
+			padding-top: 72px;
+		}
+		#copyright {
+			border: solid 0px blue;
+			margin-top: 24px;
+			width: 376px;
+			color: rgb(126, 131, 126);
+			font-size: 13px;
+			padding-left: 15px;
+		}
+		#logologin {
+			position: absolute;
+			margin-top: -146px;
+			margin-left: 340px;
+		}
+	</style>
 </head>
 <body>
-	<h1>Log Into Your Account</h1>
 	<% if (reset != 'none') { %>
 		<%= reset %>
 	<% } %>
-	<br>
-	<br>
-	<form method="POST" action="/login">
-
-		<span>Email:</span>	
-		<input type="email" name="email" required>
-		<span>Password:</span>
-		<input type="password" name="password" required>
-		<br>
-		<input type="submit" value="Log In">
-	</form>
-	<a href="/accountrecovery">Forgot Password</a>
-	<br>
+	<div id="loginBox">
+		<div id="innerBox">
+			<a href="/"><img src="logologin.png" id="logologin"></a>
+			<form method="POST" action="/login" id="login">
+				<div id="emailSection">
+					<label>Email:</label>	
+					<input type="email" name="email" id="email" required>
+				</div>
+				<div id="passwordSection">
+					<label>Password:</label>
+					<input type="password" name="password" id="password" required >
+				</div>
+				<div id="submitSection">
+					<input type="submit" value="Log In">
+				</div>
+			</form>
+			<div style="clear: both"></div>
+			<div id="forgotLink">
+				<a href="/accountrecovery">Forgot Password?</a>
+			</div>
+			<div style="clear: both"></div>
+			<div id="copyright">
+				&copy; 2015 Copyright RecipeSaver.net &nbsp;|&nbsp; All Rights Reserved
+			</div>
+		</div>
+	</div>
 	<br>
 	<% if (error != 'none') { %>
 		<%= error %>

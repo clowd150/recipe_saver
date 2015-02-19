@@ -38,11 +38,12 @@ if (!process.env.PORT) {
 var User = mongoose.model('User', new Schema({
 	id: ObjectId,
 	name: String,
-	email: { type: String, unique: true },
+	email: { type: String, unique: true, lowercase: true, trim: true },
 	password: String,
 	sortStyle: String,
 	resetPasswordToken: String,
-    resetPasswordExpires: String
+    resetPasswordExpires: String,
+    creationDate: {type: Date, default: Date.now}
 }));
 
 var Recipe = mongoose.model('Recipe', new Schema({
@@ -265,7 +266,7 @@ app.post('/', function(req, res) {
 					sendWelcomeEmail(req.body.email, req.body.name);
 
 						//Immediately log user in and send to their profile page
-						User.findOne({ email: req.body.email }, function(err, user) {
+						User.findOne({ email: req.body.email.toLowerCase() }, function(err, user) {
 						if (!user) {
 							res.render('login.ejs', { reset: 'none', error: 'Invalid email or password.'});
 						} else {
@@ -292,7 +293,7 @@ app.get('/login', function(req, res) {
 });
 
 app.post('/login', function(req, res) {
-	User.findOne({ email: req.body.email }, function(err, user) {
+	User.findOne({ email: req.body.email.toLowerCase() }, function(err, user) {
 		if (!user) {
 			res.render('login.ejs', { reset: 'none', error: 'Invalid email or password.'});
 		} else {
