@@ -550,40 +550,7 @@ function sendWelcomeEmail(userEmail, userName) {
 	    to: userEmail, // list of receivers
 	    subject: "Recipe Saver - You're In! ✔", // Subject line
 	    text: userName + ", welcome to Recipe Saver! We couldn't be more excited to have you. What can you expect from using our service? We're happy you asked.", // plaintext body
-	    html: "<b>" + userName + ", welcome to Recipe Saver!! We couldn't be more excited to have you. What can you expect from using our service? We're happy you asked.</b>" // html body
-	};
-
-	// send mail with defined transport object
-	transporter.sendMail(mailOptions, function(error, info){
-	    if(error){
-	        console.log(error);
-	    } else {
-	        console.log('Message sent: ' + info.response);
-	    }
-	    transporter.close();
-	});
-}
-
-
-function accountRecoveryEmail(userEmail) {
-		// create reusable transporter object using SMTP transport
-	var transporter = nodemailer.createTransport({
-		host: 'smtpout.secureserver.net', 
-		port: 465, 
-		auth: { 
-			user: 'info@recipesaver.net',
-			pass: goDaddyPass
-		},
-		secure: true
-	});
-
-	// setup e-mail data with unicode symbols
-	var mailOptions = {
-	    from: 'Recipe Saver <info@recipesaver.net>', // sender address
-	    to: userEmail, // list of receivers
-	    subject: "Recipe Saver Account Recovery", // Subject line
-	    text: "You forgot your password, dummy.", // plaintext body
-	    html: "You forgot your password, dummy.</b>" // html body
+	    html: "Dear" + userName + ",\n\nwelcome to Recipe Saver! We couldn't be more excited to have you! If you ever need assistance, feel free to drop us a line at info@recipesaver.net.\n\n<a href='http://recipesaver.net'>RecipeSaver.net</a>" // html body
 	};
 
 	// send mail with defined transport object

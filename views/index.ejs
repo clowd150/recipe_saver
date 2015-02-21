@@ -499,9 +499,10 @@
 				if (password !== passwordConfirm) {
 					e.preventDefault();
 					alert("Password and password confirmation must match.");
-				} /*else if (password.length < 6) {
+				} else if (password.length < 6) {
+					e.preventDefault();
 					alert("Password must be longer than 6 characters.");
-				}*/
+				}
 			});
 
 			$(document).on('click', '#regSwitch', function() {
