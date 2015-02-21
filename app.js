@@ -11,6 +11,7 @@ var crypto = require('crypto');
 var async = require('async');
 var fs = require('fs');
 var https = require('https');
+var favicon = require('serve-favicon');
 
 var Schema = mongoose.Schema; //allows use to define our schema
 var ObjectId = Schema.ObjectId;
@@ -58,6 +59,7 @@ var app = express();
 app.set('view engine', 'ejs');
 app.locals.pretty = true;
 app.use(express.static('public'));
+app.use(favicon(__dirname + '/public/bypass/favicon.ico'));
 
 //MIDDLEWARE
 //This middleware takes the body of the http request from the user and make it available via req.body and allow us to access it.
@@ -91,7 +93,6 @@ app.use(function(req, res, next) {
 function requireLogin(req, res, next) {
 	if (!req.user) {
 		res.redirect('/login');
-		console.log("kicked out!")
 	} else {
 		next();
 	}
