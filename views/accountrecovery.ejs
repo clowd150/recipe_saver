@@ -1,19 +1,142 @@
 <!DOCTYPE html>
 <html>
 <head>
+	<style>
+		@font-face {
+			font-family: 'Raleway'; 
+			src: url('Raleway-Regular.ttf'); 
+			font-style: normal;
+			font-weight: normal;
+		}
+		body {
+			background: url("toastoptimized.jpg") no-repeat center center fixed; 
+			-webkit-background-size: cover;
+			-moz-background-size: cover;
+			-o-background-size: cover;
+			background-size: cover;
+			font-family: "Raleway";
+		}
+		#loginBox {
+			width: 734px;
+			height: 270px;
+			margin: 0 auto;
+			background-color: rgba(27, 24, 24, 0.83);
+			border-radius: 25px;
+			position:absolute;
+		    top:50%;
+		    left:50%;
+		    margin-left:-367px; /* width / -2 */
+		    margin-top:-135px; /* height / -2 */
+		}
+		#login form {
+			padding-left: 5px;
+			margin-bottom: 6px;
+		}
+		#login {
+			height: 114px;
+			margin: 0 auto;
+			border: solid 0px red;
+			width: 640px;
+		}
+		#login label {
+			display: block;
+			margin-top: 8px;
+			margin-bottom: 3px;
+			font-family: "Raleway";
+			font-size: 14px;
+			color: white;
+		}
+		#login input {
+			height: 34px;
+			width: 225px;
+			border: solid 1px #54d654;
+			border-radius: 3px;
+		}
+		#login input:hover, #login input:focus{
+			border: solid 1px blue;
+		}
+		#login input[type=submit] {
+			background-color: #47C454;
+			color: white;
+			font-size: 15px;
+			font-weight: 500;
+			border: 0;
+			width: 100px;
+			margin-top: 27px;
+		}
+		#login input[type=submit]:hover {
+			background-color: rgb(18, 134, 18);
+		}
+		#email {
+			font-size: 17px;
+		}
+		#emailSection {
+			border: solid 0px red;
+			width: 215px;
+			float: left;
+			margin-left: 15px;
+		}
+		#innerBox {
+			border: solid 0px yellow;
+			height: 175px;
+			padding-top: 72px;
+		}
+		#copyright {
+			border: solid 0px blue;
+			margin-top: 24px;
+			width: 376px;
+			color: rgb(126, 131, 126);
+			font-size: 13px;
+			padding-left: 15px;
+		}
+		#logologin {
+			position: absolute;
+			margin-top: -146px;
+			margin-left: 307px;
+		}
+		#message {
+			border: solid 0px blue;
+			color: rgb(242, 74, 0);
+			padding-left: 20px;
+			font-size: 15px;
+		}
+		.g-recaptcha {
+			border: solid 0px blue;
+			float: left;
+			margin-top: 6px;
+		}
+		#submitSection {
+			border: solid 0px blue;
+			width: 100px;
+			float: left;
+			margin-left: -14px;
+		}
+	</style>
 	<script src='https://www.google.com/recaptcha/api.js'></script>
 </head>
 <body>
-	<h1>Account Recovery</h1>
-	<form method="POST">
-		<span>Email:</span>	
-		<input type="email" name="email" required>
-		<br>
-		<div class="g-recaptcha" data-sitekey="6LceDQITAAAAAHAgwfYPQGlr0bdk9xiEFJFK2-t2"></div>
-		<input type="submit" value="Send Recovery Email">
-	</form>
-	<% if (error != 'none') { %>
-		<%= error %>
-	<% } %>
+	<div id="loginBox">
+		<div id="innerBox">
+			<a href="/"><img src="logologin.png" id="logologin"></a>
+			<form method="POST"  id="login">
+				<div id="emailSection">
+					<label>Email:</label>
+					<input type="email" name="email" id="email" required>
+				</div>
+				<div class="g-recaptcha" data-sitekey="6LceDQITAAAAAHAgwfYPQGlr0bdk9xiEFJFK2-t2" style="transform:scale(0.75);transform-origin:0 4"></div>
+				<div id="submitSection">
+					<input type="submit" value="Send Email">
+				</div>
+			</form>
+			<div id="message">
+				<% if (error != 'none') { %>
+					<%= error %>
+				<% } %>
+			</div>
+			<div id="copyright">
+				&copy; 2015 Copyright RecipeSaver.net &nbsp;|&nbsp; All Rights Reserved
+			</div>
+		</div>
+	</div>
 </body>
 </html>

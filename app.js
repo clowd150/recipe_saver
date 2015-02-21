@@ -40,7 +40,6 @@ var User = mongoose.model('User', new Schema({
 	name: String,
 	email: { type: String, unique: true, lowercase: true, trim: true },
 	password: String,
-	sortStyle: String,
 	resetPasswordToken: String,
     resetPasswordExpires: String,
     creationDate: {type: Date, default: Date.now}
@@ -92,10 +91,12 @@ app.use(function(req, res, next) {
 function requireLogin(req, res, next) {
 	if (!req.user) {
 		res.redirect('/login');
+		console.log("kicked out!")
 	} else {
 		next();
 	}
 }
+
 
 // Render Account Recovery Page
 app.get('/accountrecovery', function(req, res) {
@@ -176,7 +177,7 @@ app.get('/reset/:token', function(req, res) {
       return res.redirect('/oops');
     }
     console.log("Rendering reset view...");
-    res.render('reset.ejs', {user: req.user});
+    res.render('reset.ejs', {user: user.email});
   });
 });
 
@@ -253,7 +254,6 @@ app.post('/', function(req, res) {
 				name: req.body.name,
 				email: req.body.email,
 				password: hash,
-				sortStyle: "default"
 			});
 			user.save(function(err) {
 				if (err) {
@@ -287,11 +287,6 @@ app.post('/', function(req, res) {
 	});
 });
 
-app.get('/login', function(req, res) {
-	var message = {reset: 'none', error: undefined};
-	res.render('login.ejs', message/*, { csrfToken: req.csrfToken() } */);
-});
-
 app.post('/login', function(req, res) {
 	User.findOne({ email: req.body.email.toLowerCase() }, function(err, user) {
 		if (!user) {
@@ -299,13 +294,21 @@ app.post('/login', function(req, res) {
 		} else {
 			if (bcrypt.compareSync(req.body.password, user.password)) {
 				req.session.user = user; //set-cookie: session={email: ..., password: ..., ..}
+				console.log(req.session.user);
 				res.redirect('/profile');
 			} else {
+				console.log("wrong password or email, dude")
 				res.render('login.ejs', { reset: 'none', error: 'Invalid email or password.'});				
 			}
 		}
 	});
 });
+
+app.get('/login', function(req, res) {
+	var message = {reset: 'none', error: undefined};
+	res.render('login.ejs', message/*, { csrfToken: req.csrfToken() } */);
+});
+
 
 app.get('/logout', function(req, res) {
 	req.session.reset();
@@ -323,7 +326,7 @@ app.get('/profile', requireLogin, function(req, res) {
 app.get('/recipelist', requireLogin, function(req, res) {
 	Recipe.find({ user_id: res.locals.user.email }).sort({_id: 1}).exec(function (err, records) {
 		if (err) throw err;
-		console.log("/RECIPELIST::: " + records);
+		//console.log("/RECIPELIST::: " + records);
 		res.locals.recipes = records;
 		res.render('recipelist.ejs', res.locals.recipes);
 	});
@@ -349,7 +352,6 @@ app.post('/profile', requireLogin, function(req, res) {
 	  console.dir(thor);
 	});
 	User.findOne({ email: req.session.user.email }, function (err, user) {
-		user.sortStyle = "default";
 		user.save(function(rec) {
 			console.log("Sort style set to default");
 		});
