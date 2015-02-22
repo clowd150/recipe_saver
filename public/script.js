@@ -9,6 +9,27 @@ $(document).ready(function() {
 
 	// Post Recipe
 	$(document).on('click', '#submitRecipe', function(e) {
+		var recipeName = $("#recipeNameForm").val();
+		var url = $("#urlForm").val();
+		var notes = $("#notesForm").val();
+		var tags = $("#tagsForm").val();
+		if (recipeName.length > 150) {
+			alert("Recipe name must be less than 150 characters");
+			e.preventDefault();
+			return false;
+		} else if (url.length > 500) {
+			alert("URL must be less than 500 characters");
+			e.preventDefault();
+			return false;
+		} else if (notes.length > 7000) {
+			alert("Notes must be less than 7000 characters");
+			e.preventDefault();
+			return false;
+		} else if (tags.length > 500) {
+			alert("Tags must be less than 500 characters");
+			e.preventDefault();
+			return false;
+		}
 		e.preventDefault();
 		$.ajax({
 		    type: "POST",
@@ -90,6 +111,11 @@ $(document).ready(function() {
 
 		$('#newname').keydown(function (e){
 			if(e.keyCode == 13) {
+				if ($("#newname").val().length > 150) {
+					alert("Recipe name must be less than 150 characters");
+					e.preventDefault();
+					return false;
+				}
 				$.ajax({
 			        url: "/updateName/" + recordID,
 			        type: "POST",
@@ -153,6 +179,11 @@ $(document).ready(function() {
 	
 		$('#newurl').keydown(function (e){
 			if(e.keyCode == 13) {
+				if ($("#newurl").val().length > 500) {
+					alert("URL must be less than 500 characters");
+					e.preventDefault();
+					return false;
+				}
 				$.ajax({
 			        url: "/updateUrl/" + recordID,
 			        type: "POST",
@@ -184,6 +215,7 @@ $(document).ready(function() {
 	var currentNoteRecipe;
 	var noteClone;
 	$(document).on('click', '.editNotes', function(e) {
+		resetNotesFormat();
 		//var noteRecordID;
 		e.preventDefault();
 		currentNoteRecipe = $(this).parent().parent();
@@ -235,6 +267,11 @@ $(document).ready(function() {
 	// Update existing note
 	$(document).on('click', '#newNoteSubmit', function(e) {
 		e.preventDefault();
+		if ($("#newnote").val().length > 7000) {
+			alert("Notes must be less than 7000 characters");
+			e.preventDefault();
+			return false;
+		}
 		$.ajax({
 	        url: "/updateNote/" + noteRecordID,
 	        type: "POST",
@@ -510,6 +547,11 @@ $(document).ready(function() {
 
 		$('#newtag').keydown(function (e){
 			if(e.keyCode == 13) {
+				if ($("#newtag").val().length > 500) {
+					alert("Tags must be less than 500 characters");
+					e.preventDefault();
+					return false;
+				}
 				$.ajax({
 			        url: "/updatetagname/" + recordID,
 			        type: "POST",

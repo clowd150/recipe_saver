@@ -550,7 +550,7 @@ function sendWelcomeEmail(userEmail, userName) {
 	    to: userEmail, // list of receivers
 	    subject: "Recipe Saver - You're In! ✔", // Subject line
 	    text: userName + ", welcome to Recipe Saver! We couldn't be more excited to have you. What can you expect from using our service? We're happy you asked.", // plaintext body
-	    html: "Dear" + userName + ",\n\nwelcome to Recipe Saver! We couldn't be more excited to have you! If you ever need assistance, feel free to drop us a line at info@recipesaver.net.\n\n<a href='http://recipesaver.net'>RecipeSaver.net</a>" // html body
+	    html: "Dear " + userName + ",<br><br>Welcome to Recipe Saver. We couldn't be more excited to have you! If you ever need assistance, feel free to drop us a line at info@recipesaver.net. Happy recipe hunting!<br><br><a href='http://recipesaver.net'>RecipeSaver.net</a>" // html body
 	};
 
 	// send mail with defined transport object

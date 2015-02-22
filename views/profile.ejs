@@ -317,11 +317,11 @@
 				<h2><span class="greenUnderline">Log a Recipe</span></h2>
 			</div>
 			<form id="recipeEntry">
-				<input type="text" name="recipe" placeholder="Recipe Name" required><br>
-				<input type="text" name="url" placeholder="URL"><br>
-				<textarea name="notes" placeholder="Notes"></textarea><br>
-				<input type="text" name="tags" placeholder="Tags (comma separated)"><br>
-				<input id="submitRecipe" type="submit">
+				<input type="text" name="recipe" placeholder="Recipe Name" id="recipeNameForm"><br>
+				<input type="text" name="url" id="urlForm" placeholder="URL"><br>
+				<textarea name="notes" id="notesForm" placeholder="Notes"></textarea><br>
+				<input type="text" name="tags" id="tagsForm" placeholder="Tags (comma separated)"><br>
+				<input id="submitRecipe" type="submit" value="Submit">
 			</form>
 			<br>
 			<div id="googleAd">
@@ -343,7 +343,6 @@
 	</div><!--end wrapper-->
 	<script>
 	$(document).ready(function() {
-
 		$.get( "/recipelist", function(data) {
 			$('.result').html(data);
 			$.get( "/script.js", function(data) {

@@ -157,8 +157,9 @@
 			if (password !== passwordConfirm) {
 				e.preventDefault();
 				alert("Password and password confirmation must match.");
-			} else if (password.length < 6) {
-				alert("Password must be longer than 6 characters.");
+			} else if (password.length < 6 || password.length > 20) {
+				e.preventDefault();
+				alert("Password must be longer between 6 and 20 characters.");
 			}
 		});
 	</script>
