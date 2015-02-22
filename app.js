@@ -336,7 +336,7 @@ app.get('/recipelist', requireLogin, function(req, res) {
 // POST RECIPE
 app.post('/profile', requireLogin, function(req, res) {
 	var formattedUrl = formatUrl(req);
-	var tagsArray = req.body.tags.split(', ');
+	var tagsArray = req.body.tags.toLowerCase().split(', ');
 	if (tagsArray[0] == "") {
 		tagsArray = [];
 	}
@@ -480,7 +480,7 @@ app.get('/deletetag/:recordID', requireLogin, function(req, res) {
 // ADD NEW TAG
 app.post('/updatetagname/:recordID', requireLogin, function(req, res) {
 	console.log(req.body.newtag);
-	var newtags = req.body.newtag.split(', ');
+	var newtags = req.body.newtag.toLowerCase().split(', ');
 	if (newtags[0] == "") {
 		newtags = [];
 	}
