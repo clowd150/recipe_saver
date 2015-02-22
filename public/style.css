@@ -1,7 +1,11 @@
+input[type=text], textarea {
+    width: 200px;
+    border: 1px solid black;
+    padding: 0;
+}
 #recipeEntry input {
 	border: solid 1px #E4E4E4;
 	margin-bottom: 2px;
-	width: 200px;
 	background-color: #fcfcfc;
 	height: 25px;
 }
@@ -12,9 +16,12 @@
 	margin-bottom: 2px;
 	width: 200px;
 	background-color: #fcfcfc;
+	font: inherit;
+	padding: 0;
 }
 
 #recipeEntry input[type=submit] {
+	width: 202px;
 	background-color: #FCFCFC;
 	border: solid 1px rgb(187, 187, 187);
 }
@@ -22,21 +29,4 @@
 #recipeEntry input[type=submit]:hover {
 	background-color: rgb(229, 247, 231);
 	border: solid 1px #47C454;
-}
-
-::-webkit-input-placeholder {
-   color: rgb(187, 187, 187);
-   padding-left: 6px;
-}
-:-moz-placeholder { /* Firefox 18- */
-   color: rgb(187, 187, 187);  
-   padding-left: 6px;
-}
-::-moz-placeholder {  /* Firefox 19+ */
-   color: rgb(187, 187, 187); 
-   padding-left: 6px; 
-}
-:-ms-input-placeholder {  
-   color: rgb(187, 187, 187); 
-   padding-left: 6px; 
 }
