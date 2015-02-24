@@ -270,9 +270,11 @@
 		.greenUnderline {
 			border-bottom: solid 2px rgb(71, 196, 84);
 		}
+		/*
 		#googleAd {
 			margin-left: 19px;
 		}
+		*/
 	</style>
 	<link rel="stylesheet" type="text/css" href="style.css">
 	<title><%= user.name %>'s Recipe Collection</title>
@@ -290,7 +292,7 @@
 	<div id="wrapper">
 		<header>
 			<ul>
-
+				<li><a href="https://chrome.google.com/webstore/detail/recipe-saver/opemcijjekbnjccecheklfbflnkoacai" target="blank"><img class="adminPics" src="chromeextensionicon.png">Extension</a></li>
 				<li><a href="/logout"><img class="adminPics" src="logout.png">Logout</a></li>
 			</ul>
 			<a href="/"><img id="logo" src="logo3.png"></a>
@@ -324,7 +326,7 @@
 				<input id="submitRecipe" type="submit" value="Submit">
 			</form>
 			<br>
-			<div id="googleAd">
+			<!-- <div id="googleAd">
 				<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 				<ins class="adsbygoogle"
 				     style="display:inline-block;width:160px;height:600px"
@@ -332,8 +334,8 @@
 				     data-ad-slot="5191222410"></ins>
 				<script>
 					(adsbygoogle = window.adsbygoogle || []).push({});
-				</script>
-			</div>
+				</script> 
+			</div>-->
 		</div>
 		<div class="mainRecipes">
 			<div class="result">
