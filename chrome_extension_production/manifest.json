@@ -1,0 +1,21 @@
+{
+	"manifest_version": 2,
+	"name": "Recipe Saver",
+	"description": "This extension automatically saves a recipe to your RecipeSaver.net account.",
+	"version": "1.1",
+	"icons": { 
+		"16": "icon16.png",
+	    "48": "icon48.png",
+	    "128": "icon128.png"
+	},
+		"browser_action": {
+		"default_icon": "icon.png",
+		"default_popup": "popup.html",
+		"default_title": "Add recipe"
+	},
+	"permissions": [
+	  "activeTab",
+	  "https://ajax.googleapis.com/",
+	  "storage"
+	]
+}

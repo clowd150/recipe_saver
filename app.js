@@ -92,12 +92,22 @@ app.use(function(req, res, next) {
 
 function requireLogin(req, res, next) {
 	if (!req.user) {
+		//console.log("req.user NOT FOUND");
 		res.redirect('/login');
 	} else {
+		//console.log(req);
 		next();
 	}
 }
 
+
+
+app.all('*', function(req, res, next) {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Methods', 'PUT, GET, POST, DELETE, OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Content-Type');
+  next();
+});
 
 // Render Account Recovery Page
 app.get('/accountrecovery', function(req, res) {
@@ -317,11 +327,8 @@ app.get('/logout', function(req, res) {
 });
 
 app.get('/profile', requireLogin, function(req, res) {
+	console.log(req.session.user)
 	res.render('profile.ejs');
-});
-
-app.get('/profile', requireLogin, function(req, res) {
-	res.render('profile.ejs'/*, { csrfToken: req.csrfToken() } */);
 });
 
 app.get('/recipelist', requireLogin, function(req, res) {
@@ -354,7 +361,6 @@ app.post('/profile', requireLogin, function(req, res) {
 	});
 	User.findOne({ email: req.session.user.email }, function (err, user) {
 		user.save(function(rec) {
-			console.log("Sort style set to default");
 		});
 	});
 	res.redirect('/profile');
@@ -492,21 +498,77 @@ app.post('/updatetagname/:recordID', requireLogin, function(req, res) {
 });
 
 
+// CHROME POST
+app.post('/chromepost', function(req, res) {
+	User.findOne({ email: req.body.princess.toLowerCase() }, function(err, user) {
+		if (!user) {
+				console.log("Can't find user");
+				res.sendStatus(404);
+		} else {
+			if (bcrypt.compareSync(req.body.bollocks, user.password)) {
+				req.session.user = user; //set-cookie: session={email: ..., password: ..., ..}
+				console.log(req.session.user);
+				if (req.body.tags) {
+					var tagsArray = req.body.tags.toLowerCase().split(', ');
+					if (tagsArray[0] == "") {
+						tagsArray = [];
+					}
+				}
+				var recipe = new Recipe({
+					user_id: req.session.user.email,
+					recipeName: req.body.recipe,
+					url: req.body.url,
+					notes: req.body.notes,
+					tags: tagsArray
+				});
+				console.log("Posting a recipe");
+				recipe.save(function(err, thor) {
+				  if (err) return console.error(err);
+				  console.dir(thor);
+				});
+				User.findOne({ email: req.session.user.email }, function (err, user) {
+					user.save(function(rec) {
+					});
+				});
+				res.sendStatus(200);
+			} else {
+				console.log("wrong password for chrome user")
+				res.sendStatus(404);
+			}
+		}
+	});
+});
+
+app.post('/chromeLogin', function(req, res) {
+	User.findOne({ email: req.body.princess.toLowerCase() }, function(err, user) {
+		if (!user) {
+			res.sendStatus(401); //Unauthorized
+			console.log("Unauthorized Chrome user.");
+		} else {
+			if (bcrypt.compareSync(req.body.bollocks, user.password)) {
+				console.log("Chrome user found.");
+				res.send({"username": user.name});
+			} else {
+				res.sendStatus(401); //Unauthorized
+				console.log("Unauthorized Chrome user.");
+			}
+		}
+	});
+});
+
+
+
 app.listen(port, function(req, res) {
 	console.log('App listening on port 3000');
 });
 
 
 function formatUrl(req) {
-	console.log("Default: " + url.parse(req.body.url, true).href);
+	//console.log("Default: " + url.parse(req.body.url, true).href);
 	var href = url.parse(req.body.url, true).href;
 	var protocol = url.parse(req.body.url, true).protocol;
 	var path = url.parse(req.body.url, true).path;
 	var formattedUrl;
-	console.log(href);
-	console.log(protocol);
-	console.log(path);
-	console.log("REQUEST LENTGH: " + req.body.url.length);
 	if (!protocol && req.body.url.length >= 1) {
 		formattedUrl = "http://" + href;
 	} else {
@@ -516,7 +578,7 @@ function formatUrl(req) {
 }
 
 function formatUrlUpdate(req) {
-	console.log("Default: " + url.parse(req.body.newurl, true).href);
+	//console.log("Default: " + url.parse(req.body.newurl, true).href);
 	var href = url.parse(req.body.newurl, true).href;
 	var protocol = url.parse(req.body.newurl, true).protocol;
 	var path = url.parse(req.body.newurl, true).path;

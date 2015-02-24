@@ -1,0 +1,171 @@
+<!doctype html>
+<!--
+ This page is shown when the extension button is clicked, because the
+ "browser_action" field in manifest.json contains the "default_popup" key with
+ value "popup.html".
+ -->
+<html>
+  <head>
+    <title>Recipe Saver Extension</title>
+    <style>
+		@font-face {
+			font-family: 'Raleway'; 
+			src: url('Raleway-Regular.ttf'); 
+			font-style: normal;
+			font-weight: normal;
+		}
+		@font-face {
+			font-family: 'Prox'; 
+			src: url('ProximaNova-Reg.ttf'); 
+			font-style: normal;
+			font-weight: normal;
+		}
+    	body {
+    		margin: 0;
+    		width: 400px;
+	        font-family: "Prox";
+	        font-size: 14px;
+			background-color: rgba(0, 0, 0, 0.84);
+			color: white;
+    	}
+    	body a {
+    		color: rgb(97, 213, 113);
+    	}
+    	#wrapper {
+    		padding: 11px;
+    		border: solid 4px rgb(68, 177, 83);
+			border-top: solid 2px rgba(48, 106, 56, 0.92);
+    	}
+    	#topBar {
+    		height: 32px;
+    		background-image: url('label.png');
+    	}
+    	#loginForm {
+    		display: none;
+    	}
+    	#logTog {
+    		float: left;
+    		margin-top: 5px;
+    		margin-left: 5px;
+    	}
+    	#myRecipes {
+    		float: right;
+    		margin-top: 5px;
+    		margin-right: 5px;
+    	}
+    	#logTog, #myRecipes {
+    		height: 20px;
+    		border: 0;
+    		border-radius: 3px;
+    		color: rgb(242, 242, 242);
+			background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#39B649), to(#2D8439));
+			border-top: 1px solid #30A942;
+			border-right: 1px solid #31943E;
+			border-bottom: 1px solid #178125;
+			border-left: 1px solid #30903C;
+    	}
+    	#logTog:hover, #myRecipes:hover {
+			background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#30E747), to(#2D8439));
+    	}
+    	#register {
+    		float: right;
+    	}
+    	input {
+    		border: 0;
+    		border: solid 1px #70DE7E;
+    		color: black;
+    		margin-bottom: 8px;
+    		width: 368px;
+    		height: 24px;
+    	}
+    	input:hover {
+    		border: solid 1px blue;
+    	}
+    	textarea {
+    		width: 368px;
+    		height: 40px;
+    		padding: 0;
+    		border: solid 1px #70DE7E;
+    		color: black;
+    	}
+    	textarea:hover {
+    		border: solid 1px blue;
+    	}
+    	label {
+    		color: white;
+    		font-size: 16px;
+    		display: block;
+    		margin-bottom: 3px;
+    	}
+    	#saveRecipe, #loginForm input[type=submit] {
+    		color: white;
+    		background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#42D355), to(#2A7935));
+    		border: 0;
+    		height: 30px;
+    		width: 370px;
+    	}
+    	#saveRecipe:hover, #loginForm input[type=submit]:hover {
+    		background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#2A7935), to(#42D355));
+    	}
+    	#signInMessage {
+    		display: none;
+    		color: rgb(242, 74, 0);
+    	}
+    	#postedMessage {
+    		font-size: 16px;
+    	}
+    </style>
+    <!--
+      - JavaScript and HTML must be in separate files: see our Content Security
+      - Policy documentation[1] for details and explanation.
+      -
+      - [1]: https://developer.chrome.com/extensions/contentSecurityPolicy
+     -->
+	<script src="rabbit.js"></script>
+	<script src="jquery-1.11.2.min.js"></script>
+	<script src="popup.js"></script>
+  </head>
+	<body>
+	  	<div id="topBar">
+	  		<button id="logTog">Log In</button>
+	  		<a href="http://www.recipesaver.net/profile" target="blank"><button id="myRecipes">My Recipes</button></a>
+	  	</div>
+	  	<div id="wrapper">
+		
+		  	<div id="loginForm">
+			  	<form id="testform">
+			  		<input type="email" placeholder="Email" id="princess"><br>
+			  		<input type="password" placeholder="Password" id="bollocks"><br>
+			  		<input type="submit" value="Log In" id="login">
+			  	</form>
+			  	<div id="register">
+			  		<a href="http://www.recipesaver.net" target="blank">Register</a>
+			  	</div>
+			  	<br>
+			</div>
+			<div id="signInMessage">
+				test
+			</div>
+			<br>
+		  	<!--<button id="inspect">Inspect</button>-->
+		  	<div id="chromeForm">
+			    <form>
+			    	<label>Recipe Name:</label>
+			    	<input type="text" id="recipeName" name="recipeName"><br>
+			    	<label>URL:</label>
+			    	<input type="text" id="url" name="url"><br>
+					<label>Notes:</label>
+			    	<textarea id="notes" name="notes"></textarea>
+			    	<label>Tags:</label>
+			    	<input type="text" id="tags" name="tags" placeholder="(Comma separated)">
+			    	<input type="submit" id="saveRecipe" value="Save Recipe">
+			    </form>
+			</div>
+			<div id="postedMessage" style="display: none">
+				Recipe Posted!<br>
+				<a href="http://www.recipesaver.net/profile" target="blank">View it in your collection</a> <!-- Assumes user is logged into their normal account -->
+			</div>
+		</div> <!-- End wrapper -->
+  	</body>
+</html>
+
