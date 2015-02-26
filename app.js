@@ -12,6 +12,8 @@ var async = require('async');
 var fs = require('fs');
 var https = require('https');
 var favicon = require('serve-favicon');
+var Rabbit = require("crypto-js/rabbit");
+var enc = require("crypto-js/enc-utf8")
 
 var Schema = mongoose.Schema; //allows use to define our schema
 var ObjectId = Schema.ObjectId;
@@ -505,7 +507,11 @@ app.post('/chromepost', function(req, res) {
 				console.log("Can't find user");
 				res.sendStatus(404);
 		} else {
-			if (bcrypt.compareSync(req.body.bollocks, user.password)) {
+			var password = req.body.bollocks;
+			var mypassword = JSON.parse(password);
+			var secret = req.body.sct;
+			var password = Rabbit.decrypt(mypassword, secret).toString(enc);
+			if (bcrypt.compareSync(password, user.password)) {
 				req.session.user = user; //set-cookie: session={email: ..., password: ..., ..}
 				console.log(req.session.user);
 				if (req.body.tags) {
@@ -540,12 +546,30 @@ app.post('/chromepost', function(req, res) {
 });
 
 app.post('/chromeLogin', function(req, res) {
+	/* PERECT DO NOT TOUCH!
+	var reqBody = req.body;
+	console.log(reqBody);
+
+	var password = req.body.password;
+
+	var mypassword = JSON.parse(password); //IMPORTANT!
+	console.log(mypassword);
+
+	var secret = req.body.sct;
+
+	var y = Rabbit.decrypt(mypassword, secret).toString(enc);
+	console.log(y);
+	*/
+	var password = req.body.password;
+	var mypassword = JSON.parse(password);
+	var secret = req.body.sct;
+	var password = Rabbit.decrypt(mypassword, secret).toString(enc);
 	User.findOne({ email: req.body.princess.toLowerCase() }, function(err, user) {
 		if (!user) {
 			res.sendStatus(401); //Unauthorized
 			console.log("Unauthorized Chrome user.");
 		} else {
-			if (bcrypt.compareSync(req.body.bollocks, user.password)) {
+			if (bcrypt.compareSync(password, user.password)) {
 				console.log("Chrome user found.");
 				res.send({"username": user.name});
 			} else {

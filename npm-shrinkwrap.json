@@ -104,6 +104,11 @@
       "from": "crypto@",
       "resolved": "https://registry.npmjs.org/crypto/-/crypto-0.0.3.tgz"
     },
+    "crypto-js": {
+      "version": "3.1.2-5",
+      "from": "crypto-js@",
+      "resolved": "https://registry.npmjs.org/crypto-js/-/crypto-js-3.1.2-5.tgz"
+    },
     "csurf": {
       "version": "1.6.6",
       "from": "csurf@^1.6.5",
@@ -386,6 +391,11 @@
           "resolved": "https://registry.npmjs.org/utils-merge/-/utils-merge-1.0.0.tgz"
         }
       }
+    },
+    "ezcrypto": {
+      "version": "0.0.3",
+      "from": "ezcrypto@",
+      "resolved": "https://registry.npmjs.org/ezcrypto/-/ezcrypto-0.0.3.tgz"
     },
     "fs": {
       "version": "0.0.2",
