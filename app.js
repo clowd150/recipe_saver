@@ -22,6 +22,7 @@ var port = process.env.PORT || 3000;
 
 var goDaddyPass = (process.env.PORT) ? process.env.GODADDY : fs.readFileSync('./public/godaddyemail.txt').toString();
 var recaptchaSK = (process.env.PORT) ? process.env.RECAPTCHA : fs.readFileSync('./public/recaptchaSK.txt').toString();
+var secret = (process.env.PORT) ? process.env.SECRET : fs.readFileSync('./public/rabbit.txt').toString();
 
 // Database Options
 var options = { server: { socketOptions: { keepAlive: 1, connectTimeoutMS: 30000 } }, 
@@ -509,7 +510,6 @@ app.post('/chromepost', function(req, res) {
 		} else {
 			var password = req.body.bollocks;
 			var mypassword = JSON.parse(password);
-			var secret = req.body.sct;
 			var password = Rabbit.decrypt(mypassword, secret).toString(enc);
 			if (bcrypt.compareSync(password, user.password)) {
 				req.session.user = user; //set-cookie: session={email: ..., password: ..., ..}
@@ -562,7 +562,6 @@ app.post('/chromeLogin', function(req, res) {
 	*/
 	var password = req.body.password;
 	var mypassword = JSON.parse(password);
-	var secret = req.body.sct;
 	var password = Rabbit.decrypt(mypassword, secret).toString(enc);
 	User.findOne({ email: req.body.princess.toLowerCase() }, function(err, user) {
 		if (!user) {
