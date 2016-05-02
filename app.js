@@ -28,6 +28,7 @@ var secret = (process.env.PORT) ? process.env.SECRET : fs.readFileSync('./public
 var options = { server: { socketOptions: { keepAlive: 1, connectTimeoutMS: 30000 } }, 
 	replset: { socketOptions: { keepAlive: 1, connectTimeoutMS : 30000 } } };
 
+
 //CONNECT TO MONGO
 if (!process.env.PORT) {
 	mongoose.connect('mongodb://localhost/auth');
