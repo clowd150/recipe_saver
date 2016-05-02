@@ -13,7 +13,7 @@ var fs = require('fs');
 var https = require('https');
 var favicon = require('serve-favicon');
 var Rabbit = require("crypto-js/rabbit");
-var enc = require("crypto-js/enc-utf8")
+var enc = require("crypto-js/enc-utf8");
 
 var Schema = mongoose.Schema; //allows use to define our schema
 var ObjectId = Schema.ObjectId;
