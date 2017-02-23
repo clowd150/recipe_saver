@@ -382,6 +382,18 @@
 		});
 	});
 	</script>
+	<!-- Temporary HotJar Survey -->
+	<script>
+		if (!$('#announcement').length && !localStorage.hjSeen) {
+			$('#wrapper').prepend('<div id="announcement" style="padding-bottom: 4px; margin: 0 auto; width: 673px; margin-bottom: 14px; margin-top: 7px; overflow: auto; border-bottom: solid 1px #47c454;"><div style="display: inline-block; float: left;">Recipe Saver 2.0 is coming! We\'d love to get your feedback on this quick 3 question <a target="_blank" href="https://insights.hotjar.com/s?siteId=426635&surveyId=19402">survey</a>.</div><div id="hj-close" style="font-weight: bold; display: inline-block; float: right; cursor: pointer;">Close</div></div>');
+
+			$('#announcement a, #hj-close').click(function() {
+				$('#announcement').hide();
+				localStorage.hjSeen = true;
+			});
+		}
+	</script>
+
 
 </body>
 </html>
