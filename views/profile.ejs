@@ -305,16 +305,6 @@
 		ga('create', 'UA-59805292-1', 'auto');
 		ga('send', 'pageview');
 	</script>
-	<script>
-	    (function(h,o,t,j,a,r){
-	        h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
-	        h._hjSettings={hjid:426635,hjsv:5};
-	        a=o.getElementsByTagName('head')[0];
-	        r=o.createElement('script');r.async=1;
-	        r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
-	        a.appendChild(r);
-	    })(window,document,'//static.hotjar.com/c/hotjar-','.js?sv=');
-	</script>
 	<link rel="icon" type="image/png" href="bypass/favicon.ico">
 </head>
 <body>
@@ -382,18 +372,5 @@
 		});
 	});
 	</script>
-	<!-- Temporary HotJar Survey -->
-	<script>
-		if (!$('#announcement').length && !localStorage.hjSeen) {
-			$('#wrapper').prepend('<div id="announcement" style="padding-bottom: 4px; margin: 0 auto; width: 673px; margin-bottom: 14px; margin-top: 7px; overflow: auto; border-bottom: solid 1px #47c454;"><div style="display: inline-block; float: left;">Recipe Saver 2.0 is coming! We\'d love to get your feedback on this quick 3 question <a target="_blank" href="https://insights.hotjar.com/s?siteId=426635&surveyId=19402">survey</a>.</div><div id="hj-close" style="font-weight: bold; display: inline-block; float: right; cursor: pointer;">Close</div></div>');
-
-			$('#announcement a, #hj-close').click(function() {
-				$('#announcement').hide();
-				localStorage.hjSeen = true;
-			});
-		}
-	</script>
-
-
 </body>
 </html>
